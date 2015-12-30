@@ -1,0 +1,4 @@
+# PHPStorm config files:
+\.idea/*
+
+\.DS_Store
