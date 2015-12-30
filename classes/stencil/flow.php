@@ -104,40 +104,14 @@ class Stencil_Flow implements Stencil_Flow_Interface {
 		 * Add archive option for archive pages:
 		 */
 		if ( 'archived' !== $page && in_array( $page, $this->archive_pages, true ) ) {
-
-			$archived_options = $this->get_view_hierarchy( 'archived' );
-			if ( array() !== $archived_options ) {
-				if ( ! ( $options instanceof AppendIterator ) ) {
-					$all_options = new AppendIterator();
-					$all_options->append( $options );
-				} else {
-					$all_options = $options;
-				}
-
-				$all_options->append( new ArrayIterator( $archived_options ) );
-
-				$options = $all_options;
-			}
+			$this->add_to_options( 'archived', $options );
 		}
 
 		/**
 		 * Add paged option for paged pages:
 		 */
 		if ( 'paged' !== $page && is_paged() ) {
-
-			$paged_options = $this->get_view_hierarchy( 'paged' );
-			if ( array() !== $paged_options ) {
-				if ( ! ( $options instanceof AppendIterator ) ) {
-					$all_options = new AppendIterator();
-					$all_options->append( $options );
-				} else {
-					$all_options = $options;
-				}
-
-				$all_options->append( new ArrayIterator( $paged_options ) );
-
-				$options = $all_options;
-			}
+			$this->add_to_options( 'paged', $options );
 		}
 
 		/**
@@ -149,5 +123,30 @@ class Stencil_Flow implements Stencil_Flow_Interface {
 		$options = Stencil_Environment::filter( 'views-' . $page, $options );
 
 		return $options;
+	}
+
+	/**
+	 * Add additional options to the existing array
+	 *
+	 * @param string         $type Type to get options for.
+	 * @param array|Iterator $options Reference. Existing options.
+	 *
+	 * @throws Exception
+	 */
+	private function add_to_options( $type, & $options ) {
+		$additive_options = $this->get_view_hierarchy( $type );
+
+		if ( array() !== $additive_options ) {
+			if ( ! ( $options instanceof AppendIterator ) ) {
+				$all_options = new AppendIterator();
+				$all_options->append( $options );
+			} else {
+				$all_options = $options;
+			}
+
+			$all_options->append( new ArrayIterator( $additive_options ) );
+
+			$options = $all_options;
+		}
 	}
 }
