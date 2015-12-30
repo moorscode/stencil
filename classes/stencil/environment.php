@@ -95,11 +95,11 @@ class Stencil_Environment {
 		 */
 
 		switch ( true ) {
-			case ( is_404() ) :
+			case ( is_404() ):
 				$page = 'error';
 				break;
 
-			case ( is_search() ) :
+			case ( is_search() ):
 				$page = 'search';
 				break;
 
@@ -107,7 +107,7 @@ class Stencil_Environment {
 			 * Case is_home() return true when on the posts list page,
 			 * This is usually the page that shows the latest 10 posts.
 			 */
-			case ( is_home() ) :
+			case ( is_home() ):
 				$page = 'home';
 				break;
 
@@ -115,11 +115,11 @@ class Stencil_Environment {
 			 * Case is_front_page() returns true if the user is on the page or page of posts that is set to the front page
 			 * on Settings->Reading->Front page displays
 			 */
-			case ( is_front_page() ) :
+			case ( is_front_page() ):
 				$page = 'front_page';
 				break;
 
-			case ( is_post_type_archive() ) :
+			case ( is_post_type_archive() ):
 				$page = 'post-type-archive';
 				break;
 
@@ -127,43 +127,43 @@ class Stencil_Environment {
 				$page = 'custom';
 				break;
 
-			case ( is_single() ) :
+			case ( is_single() ):
 				$page = 'single';
 				break;
 
-			case ( is_page() ) :
+			case ( is_page() ):
 				$page = 'page';
 				break;
 
-			case ( is_attachment() ) :
+			case ( is_attachment() ):
 				$page = 'attachment';
 				break;
 
-			case ( is_comments_popup() ) :
+			case ( is_comments_popup() ):
 				$page = 'comments-popup';
 				break;
 
-			case ( is_tax() ) :
+			case ( is_tax() ):
 				$page = 'taxonomy';
 				break;
 
-			case ( is_tag() ) :
+			case ( is_tag() ):
 				$page = 'tag';
 				break;
 
-			case ( is_date() ) :
+			case ( is_date() ):
 				$page = 'date';
 				break;
 
-			case ( is_category() ) :
+			case ( is_category() ):
 				$page = 'category';
 				break;
 
-			case ( is_author() ) :
+			case ( is_author() ):
 				$page = 'author';
 				break;
 
-			case ( is_archive() ) :
+			case ( is_archive() ):
 				$page = 'archive';
 				break;
 		}
