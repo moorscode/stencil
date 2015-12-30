@@ -16,7 +16,7 @@ class Stencil_Feedback {
 	 *
 	 * @var array
 	 */
-	static $notices = array();
+	private static $notices = array();
 
 	/**
 	 * Display a notification

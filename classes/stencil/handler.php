@@ -25,7 +25,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	 *
 	 * @var null|Stencil_Recorder_Interface
 	 */
-	protected $revertRecorderAfterFinish;
+	protected $revert_recorder_after_finish;
 
 	/**
 	 * The instance of the proxy
@@ -258,12 +258,12 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	 * Recorder for inline HTML cathing
 	 *
 	 * @param string                          $variable Variable to record into.
-	 * @param Stencil_Recorder_Interface|null $temporaryRecorder Optional. Recorder to use for this recording.
+	 * @param Stencil_Recorder_Interface|null $temporary_recorder Optional. Recorder to use for this recording.
 	 *
 	 * @throws Exception When already recording for other variable.
 	 * @throws InvalidArgumentException When the variable name is not a string.
 	 */
-	public function start_recording( $variable, Stencil_Recorder_Interface $temporaryRecorder = null ) {
+	public function start_recording( $variable, Stencil_Recorder_Interface $temporary_recorder = null ) {
 		/**
 		 * Throw exception or error?
 		 */
@@ -276,10 +276,10 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 		}
 
 		// Set temp recorder as active.
-		if ( ! is_null( $temporaryRecorder ) ) {
-			$swap                            = $this->recorder;
-			$this->recorder                  = $temporaryRecorder;
-			$this->revertRecorderAfterFinish = $swap;
+		if ( ! is_null( $temporary_recorder ) ) {
+			$swap                               = $this->recorder;
+			$this->recorder                     = $temporary_recorder;
+			$this->revert_recorder_after_finish = $swap;
 		}
 
 		$this->recording_for = $variable;
@@ -305,9 +305,9 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 		/**
 		 * Re-set original recorder
 		 */
-		if ( isset( $this->revertRecorderAfterFinish ) ) {
-			$this->recorder = $this->revertRecorderAfterFinish;
-			unset( $this->revertRecorderAfterFinish );
+		if ( isset( $this->revert_recorder_after_finish ) ) {
+			$this->recorder = $this->revert_recorder_after_finish;
+			unset( $this->revert_recorder_after_finish );
 		}
 
 		/**

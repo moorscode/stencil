@@ -46,7 +46,7 @@ if ( ! function_exists( '__stencil_plugins_loaded' ) ) :
 	 */
 	function __stencil_plugins_loaded() {
 		$plugin_directory = basename( dirname( __FILE__ ) );
-		$plugin_name = sprintf( '%1$s/%1$s.php', $plugin_directory );
+		$plugin_name      = sprintf( '%1$s/%1$s.php', $plugin_directory );
 
 		if ( ! is_plugin_active( $plugin_name ) ) {
 			add_action( 'admin_notices', '__stencil_not_active' );

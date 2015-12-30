@@ -25,12 +25,12 @@ __stencil_manual_load();
  * @internal
  */
 function __stencil_manual_load() {
-	$directory            = new RecursiveDirectoryIterator( dirname( __FILE__ ) . '/classes/' );
-	$directoryIterator    = new RecursiveIteratorIterator( $directory );
-	$phpDirectoryIterator = new RegexIterator( $directoryIterator, '/.*?\.php$/i', RecursiveRegexIterator::GET_MATCH );
+	$directory              = new RecursiveDirectoryIterator( dirname( __FILE__ ) . '/classes/' );
+	$directory_iterator     = new RecursiveIteratorIterator( $directory );
+	$php_directory_iterator = new RegexIterator( $directory_iterator, '/.*?\.php$/i', RecursiveRegexIterator::GET_MATCH );
 
 	$files = array();
-	foreach ( $phpDirectoryIterator as $file ) {
+	foreach ( $php_directory_iterator as $file ) {
 		$files[] = $file[0];
 	}
 
