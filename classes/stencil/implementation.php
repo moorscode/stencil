@@ -36,7 +36,7 @@ abstract class Stencil_Implementation implements Stencil_Interface, Stencil_Impl
 	/**
 	 * Path to look for templates/views
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected $template_path;
 

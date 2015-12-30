@@ -116,7 +116,7 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	/**
 	 * Get a new Handler
 	 *
-	 * @param Stencil_Implementation          $implementation Optional. Set Implementation on new Handler.
+	 * @param Stencil_Implementation|null     $implementation Optional. Set Implementation on new Handler.
 	 * @param Stencil_Recorder_Interface|null $recorder Optional. Supply a custom Recorder.
 	 *
 	 * @return Stencil_Handler
@@ -230,8 +230,8 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * Handler proxy functions
 	 *
-	 * @param string                     $variable Variable to Record into.
-	 * @param Stencil_Recorder_Interface $recorder Optional. Custom recorder to use for this action.
+	 * @param string                          $variable Variable to Record into.
+	 * @param Stencil_Recorder_Interface|null $recorder Optional. Custom recorder to use for this action.
 	 */
 	public function start_recording( $variable, Stencil_Recorder_Interface $recorder = null ) {
 		self::$handler->start_recording( $variable, $recorder );

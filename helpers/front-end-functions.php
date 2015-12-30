@@ -19,7 +19,7 @@ function get_stencil() {
  *
  * Usable in AJAX requests.
  *
- * @param Stencil_Implementation          $implementation Optional. Set Implementation on new Handler.
+ * @param Stencil_Implementation|null     $implementation Optional. Set Implementation on new Handler.
  * @param Stencil_Recorder_Interface|null $recorder Optional. Supply a custom Recorder.
  *
  * @return Stencil_Handler

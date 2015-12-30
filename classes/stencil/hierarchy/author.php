@@ -16,12 +16,12 @@ class Stencil_Hierarchy_Author extends Stencil_Abstract_Hierarchy {
 		$author  = get_queried_object();
 		$options = array();
 
-		if ( $author instanceof \WP_User ) {
-			$options[] = "single/author-{$author->user_nicename}";
-			$options[] = "author-{$author->user_nicename}";
+		if ( $author instanceof WP_User ) {
+			$options[] = 'single/author' . $author->user_nicename;
+			$options[] = 'author-' . $author->user_nicename;
 
-			$options[] = "single/author-{$author->ID}";
-			$options[] = "author-{$author->ID}";
+			$options[] = 'single/author' . $author->ID;
+			$options[] = 'author-' . $author->ID;
 		}
 
 		$options[] = 'archive/author';

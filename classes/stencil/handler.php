@@ -16,9 +16,9 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	/**
 	 * Use ob_start / ob_end_clean to record a variable.
 	 *
-	 * @var bool
+	 * @var string
 	 */
-	protected $recording_for = false;
+	protected $recording_for = null;
 
 	/**
 	 * Revert to recorder after finishing recording.
@@ -55,8 +55,8 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	/**
 	 * StencilHandler constructor.
 	 *
-	 * @param Stencil_Implementation     $implementation Implementation to use.
-	 * @param Stencil_Recorder_Interface $recorder Recorder to use.
+	 * @param Stencil_Implementation          $implementation Implementation to use.
+	 * @param Stencil_Recorder_Interface|null $recorder Recorder to use.
 	 */
 	public function __construct( Stencil_Implementation $implementation, Stencil_Recorder_Interface $recorder = null ) {
 		$this->proxy    = $implementation;
@@ -79,7 +79,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 			$this->unhook_wp_header_and_footer();
 		}
 
-		$this->load_wp_header_and_footer = $yes_or_no;
+		$this->load_wp_header_and_footer = (bool) $yes_or_no;
 	}
 
 	/**
@@ -119,7 +119,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	/**
 	 * Find the view that is implemented
 	 *
-	 * @param array $options Options that were collected from the hierarchy.
+	 * @param array|null $options Options that were collected from the hierarchy.
 	 *
 	 * @return string
 	 */
@@ -257,8 +257,8 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	/**
 	 * Recorder for inline HTML cathing
 	 *
-	 * @param string                     $variable Variable to record into.
-	 * @param Stencil_Recorder_Interface $temporaryRecorder Optional. Recorder to use for this recording.
+	 * @param string                          $variable Variable to record into.
+	 * @param Stencil_Recorder_Interface|null $temporaryRecorder Optional. Recorder to use for this recording.
 	 *
 	 * @throws Exception When already recording for other variable.
 	 * @throws InvalidArgumentException When the variable name is not a string.
@@ -267,7 +267,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 		/**
 		 * Throw exception or error?
 		 */
-		if ( $this->recording_for ) {
+		if ( ! empty( $this->recording_for ) ) {
 			throw new Exception( sprintf( 'Already recording variable "%s".', $this->recording_for ) );
 		}
 
@@ -329,7 +329,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	 * @throws LogicException When we are still recording a variable.
 	 */
 	protected function internal_fetch( $template, $from ) {
-		if ( ! empty( $this->recording_for ) ) {
+		if ( ! is_null( $this->recording_for ) ) {
 			throw new LogicException( sprintf( 'Stencil: trying to display template but still recording for "%s".', $this->recording_for ) );
 		}
 

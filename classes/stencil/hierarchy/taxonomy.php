@@ -20,11 +20,11 @@ class Stencil_Hierarchy_Taxonomy extends Stencil_Abstract_Hierarchy {
 		if ( ! empty( $term->slug ) ) {
 			$taxonomy = $term->taxonomy;
 
-			$options[] = "archive/taxonomy-$taxonomy-{$term->slug}";
-			$options[] = "taxonomy-$taxonomy-{$term->slug}";
+			$options[] = 'archive/taxonomy-' . $taxonomy . '-' . $term->slug;
+			$options[] = 'taxonomy-' . $taxonomy . '-' . $term->slug;
 
-			$options[] = "archive/taxonomy-$taxonomy";
-			$options[] = "taxonomy-$taxonomy";
+			$options[] = 'archive/taxonomy-' . $taxonomy;
+			$options[] = 'taxonomy-' . $taxonomy;
 		}
 		$options[] = 'archive/taxonomy';
 		$options[] = 'taxonomy';

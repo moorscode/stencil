@@ -28,7 +28,7 @@ class Stencil_Hierarchy_Single extends Stencil_Abstract_Hierarchy {
 					$options[] = 'single/' . $types[0];
 					$options[] = $types[0];
 
-					if ( isset( $type[1] ) && ! empty( $types[1] ) ) {
+					if ( isset( $types[1] ) && ! empty( $types[1] ) ) {
 						$options[] = 'single/' . $types[1];
 						$options[] = $types[1];
 

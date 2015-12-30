@@ -27,7 +27,7 @@ abstract class Stencil_Container_Implementation extends Stencil_Implementation {
 	 *
 	 * @return mixed Value of the variable after setting.
 	 */
-	function set( $variable, $value ) {
+	public function set( $variable, $value ) {
 		$this->variables[ $variable ] = $value;
 
 		return $this->get( $variable );
@@ -40,7 +40,7 @@ abstract class Stencil_Container_Implementation extends Stencil_Implementation {
 	 *
 	 * @return null
 	 */
-	function get( $variable ) {
+	public function get( $variable ) {
 		if ( isset( $this->variables[ $variable ] ) ) {
 			return $this->variables[ $variable ];
 		}

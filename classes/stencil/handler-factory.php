@@ -100,9 +100,9 @@ class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
 	/**
 	 * Unified setter function
 	 *
-	 * @param string $type Type of object.
-	 * @param string $page Page name.
-	 * @param mixed  $handler Handler to apply.
+	 * @param string     $type Type of object.
+	 * @param string     $page Page name.
+	 * @param mixed|null $handler Handler to apply.
 	 *
 	 * @throws InvalidArgumentException For invalid argument types.
 	 */

@@ -141,7 +141,7 @@ class Stencil_Config {
 
 			printf(
 				'<label><input type="checkbox" name="%s"%s>%s%s</label><br>',
-				esc_attr( "{$base}[plugin][{$slug}]" ),
+				esc_attr( sprintf( '%s[plugin][%s]', $base, $slug ) ),
 				implode( ' ', $attributes ),
 				esc_html( $name ),
 				! empty( $error ) ? sprintf( ' <small>(%s)</small>', $error ) : ''
