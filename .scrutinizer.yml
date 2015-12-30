@@ -23,6 +23,7 @@ checks:
         naming_conventions:
             local_variable: '^[a-z][a-z_0-9]*$'
             abstract_class_name: ^Abstract|Factory$
+            utility_class_name: '.*'
             constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$'
             property_name: '^[a-z][a-z_0-9]*$'
             method_name: '^(?:[a-z]|__)[a-z_0-9]*$'
@@ -30,6 +31,7 @@ checks:
             interface_name: '^[A-Z][a-zA-Z0-9_]*Interface$'
             type_name: '^[A-Z][a-zA-Z0-9_]*$'
             exception_name: '^[A-Z][a-zA-Z0-9_]*Exception$'
+            isser_method_name: '.*'
         more_specific_types_in_doc_comments: true
         fix_line_ending: true
         fix_use_statements:
