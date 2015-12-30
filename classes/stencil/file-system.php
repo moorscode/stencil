@@ -10,52 +10,6 @@
  */
 class Stencil_File_System {
 	/**
-	 * Available types of directories
-	 *
-	 * @var array
-	 */
-	private static $types = array(
-		'controllers',
-		'router',
-		'functions',
-		'views',
-	);
-
-	/**
-	 * Get a single directory from root or child theme
-	 *
-	 * Not used anywhere yet.. could be removed
-	 * todo: determine usefulness
-	 *
-	 * @param string $type Directory type to get Path of.
-	 *
-	 * @return bool|string
-	 */
-	public static function get( $type ) {
-		if ( ! in_array( $type, self::$types ) ) {
-			// Trigger error?
-			return false;
-		}
-
-		$path = Stencil_Environment::filter( 'path', $type );
-		if ( is_dir( $path ) ) {
-			return $path;
-		}
-
-		$paths = self::get_potential_directories( $type );
-		foreach ( $paths as $path ) {
-
-			$path = Stencil_Environment::filter( 'path-' . $type, $path );
-
-			if ( is_dir( $path ) ) {
-				return $path;
-			}
-		}
-
-		return false;
-	}
-
-	/**
 	 * Include a file from child or root theme
 	 *
 	 * @param string $file File to include.

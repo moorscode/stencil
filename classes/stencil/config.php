@@ -122,9 +122,6 @@ class Stencil_Config {
 				}
 			}
 
-			/**
-			 * Todo: make MU compatible
-			 */
 			$exists = is_dir( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
 
 			/**
