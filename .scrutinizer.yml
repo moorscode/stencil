@@ -1,7 +1,7 @@
 build:
     environment:
         php:
-          version: 5.4.41
+          version: 5.6
 
 checks:
     php:
@@ -22,7 +22,7 @@ checks:
         newline_at_end_of_file: true
         naming_conventions:
             local_variable: '^[a-z][a-z_0-9]*$'
-            abstract_class_name: ^Stencil_Abstract|Abstract|Factory$
+            abstract_class_name: ^Abstract|Factory$
             utility_class_name: 'Utils?$'
             constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$'
             property_name: '^[a-z][a-z_0-9]*$'
@@ -53,3 +53,7 @@ checks:
 
 tools:
     sensiolabs_security_checker: true
+
+filter:
+    excluded_paths:
+        - lib/*
