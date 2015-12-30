@@ -35,7 +35,7 @@ class Stencil_Environment {
 	 */
 	public static function filter( $variable ) {
 		$arguments    = func_get_args();
-		$arguments[0] = self::format_filter( $arguments[0] );
+		$arguments[0] = self::format_filter( $variable );
 
 		return call_user_func_array( 'apply_filters', $arguments );
 	}
@@ -47,7 +47,7 @@ class Stencil_Environment {
 	 */
 	public static function trigger( $hook ) {
 		$arguments    = func_get_args();
-		$arguments[0] = self::format_hook( $arguments[0] );
+		$arguments[0] = self::format_hook( $hook );
 
 		call_user_func_array( 'do_action', $arguments );
 	}
@@ -171,8 +171,8 @@ class Stencil_Environment {
 		/**
 		 * Filter: override for page selection
 		 */
-		$page = Stencil_Environment::filter( 'page-' . $page, $page );
-		$page = Stencil_Environment::filter( 'page', $page );
+		$page = self::filter( 'page-' . $page, $page );
+		$page = self::filter( 'page', $page );
 
 		return $page;
 	}

@@ -186,45 +186,40 @@ class Stencil_Config {
 		 */
 		$install_plugins = get_option( $this->option_name );
 
-		if ( empty( $install_plugins ) ) {
+		if ( empty( $install_plugins ) || ! is_array( $install_plugins ) ) {
 			return;
 		}
 
-		if ( is_array( $install_plugins ) ) {
-			$changed = false;
+		if ( isset( $install_plugins['plugin'] ) && is_array( $install_plugins['plugin'] ) ) {
 
-			if ( isset( $install_plugins['plugin'] ) && is_array( $install_plugins['plugin'] ) ) {
+			printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
 
-				printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
+			foreach ( $install_plugins['plugin'] as $slug => $on ) {
 
-				foreach ( $install_plugins['plugin'] as $slug => $on ) {
+				$installed = $this->install_plugin( $slug );
 
-					$installed = $this->install_plugin( $slug );
-
-					if ( ! $installed ) {
-						printf(
-							'<em>%s</em><br>',
-							sprintf(
-								__( 'Plugin %s could not be installed!', 'stencil' ),
-								$this->known_implementations[ $slug ]
-							)
-						);
-					}
-
-					unset( $install_plugins['plugin'][ $slug ] );
+				if ( ! $installed ) {
+					printf(
+						'<em>%s</em><br>',
+						sprintf(
+							__( 'Plugin %s could not be installed!', 'stencil' ),
+							$this->known_implementations[ $slug ]
+						)
+					);
 				}
 
-				printf( '<b>%s</b>', __( 'Done.', 'stencil' ) );
+				unset( $install_plugins['plugin'][ $slug ] );
 			}
 
-			if ( empty( $install_plugins['plugin'] ) ) {
-				unset( $install_plugins['plugin'] );
-			}
-
-			if ( $changed ) {
-				update_option( $this->option_name, $install_plugins );
-			}
+			printf( '<b>%s</b>', __( 'Done.', 'stencil' ) );
 		}
+
+		if ( empty( $install_plugins['plugin'] ) ) {
+			unset( $install_plugins['plugin'] );
+		}
+
+		update_option( $this->option_name, $install_plugins );
+
 	}
 
 	/**
