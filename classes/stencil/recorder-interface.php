@@ -11,6 +11,8 @@
 interface Stencil_Recorder_Interface {
 	/**
 	 * Start capturing output buffer
+	 *
+	 * @return void
 	 */
 	public function start_recording();
 

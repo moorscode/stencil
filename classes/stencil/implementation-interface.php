@@ -17,6 +17,8 @@ interface Stencil_Implementation_Interface {
 	 * Uses fetch to fetch the output
 	 *
 	 * @param string $template Template file to show.
+	 *
+	 * @return void
 	 */
 	public function display( $template );
 

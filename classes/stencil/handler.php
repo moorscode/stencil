@@ -25,7 +25,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	 *
 	 * @var null|Stencil_Recorder_Interface
 	 */
-	protected $revert_recorder_after_finish;
+	protected $revert_recorder_to;
 
 	/**
 	 * The instance of the proxy
@@ -277,9 +277,9 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 
 		// Set temp recorder as active.
 		if ( ! is_null( $temporary_recorder ) ) {
-			$swap                               = $this->recorder;
-			$this->recorder                     = $temporary_recorder;
-			$this->revert_recorder_after_finish = $swap;
+			$swap                     = $this->recorder;
+			$this->recorder           = $temporary_recorder;
+			$this->revert_recorder_to = $swap;
 		}
 
 		$this->recording_for = $variable;
@@ -305,9 +305,9 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 		/**
 		 * Re-set original recorder
 		 */
-		if ( isset( $this->revert_recorder_after_finish ) ) {
-			$this->recorder = $this->revert_recorder_after_finish;
-			unset( $this->revert_recorder_after_finish );
+		if ( isset( $this->revert_recorder_to ) ) {
+			$this->recorder = $this->revert_recorder_to;
+			unset( $this->revert_recorder_to );
 		}
 
 		/**

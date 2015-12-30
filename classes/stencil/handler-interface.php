@@ -55,7 +55,7 @@ interface Stencil_Handler_Interface extends Stencil_Interface {
 	 *
 	 * Handler proxy functions
 	 *
-	 * @returns mixed Value of Recording.
+	 * @return mixed Value of Recording.
 	 */
 	public function finish_recording();
 }
