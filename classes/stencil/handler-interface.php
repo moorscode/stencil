@@ -25,6 +25,8 @@ interface Stencil_Handler_Interface extends Stencil_Interface {
 	 * Handler proxy functions
 	 *
 	 * @param Stencil_Recorder_Interface $recorder New Recorder to use.
+	 *
+	 * @return void
 	 */
 	public function set_recorder( Stencil_Recorder_Interface $recorder );
 
@@ -43,6 +45,8 @@ interface Stencil_Handler_Interface extends Stencil_Interface {
 	 * Handler proxy functions
 	 *
 	 * @param string $variable Variable to Record into.
+	 *
+	 * @return void
 	 */
 	public function start_recording( $variable );
 

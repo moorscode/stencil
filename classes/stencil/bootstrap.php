@@ -32,7 +32,7 @@ class Stencil_Bootstrap {
 		/**
 		 * Allow implementation to be filtered
 		 */
-		add_filter( Stencil_Environment::format_filter( 'implementation' ), array( __CLASS__, 'get_implementation' ) );
+		add_filter( Stencil_Environment::format_filter( 'implementation' ), array( __CLASS__, 'implementation' ) );
 
 		/**
 		 * Boot Stencil when an engine is ready
@@ -57,7 +57,7 @@ class Stencil_Bootstrap {
 	 */
 	public static function boot() {
 		$implementation = Stencil_Environment::filter( 'implementation', false );
-		$required = Stencil_Environment::filter( 'require', false );
+		$required       = Stencil_Environment::filter( 'require', false );
 
 		if ( $implementation !== $required ) {
 			$message = __( '<em>Theme Addon conflict</em>. The active theme requires the Stencil Implementation: <em>%s</em> to be active.', 'stencil' );
@@ -77,7 +77,7 @@ class Stencil_Bootstrap {
 	 *
 	 * @return bool
 	 */
-	public static  function get_implementation() {
+	public static function implementation() {
 		$engines = Stencil_Environment::filter( 'register-engine', array() );
 		if ( ! is_array( $engines ) || array() === $engines ) {
 			return false;

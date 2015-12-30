@@ -22,7 +22,7 @@ checks:
         newline_at_end_of_file: true
         naming_conventions:
             local_variable: '^[a-z][a-z_0-9]*$'
-            abstract_class_name: ^Abstract|Factory$
+            abstract_class_name: ^Stencil_Abstract|Abstract|Factory$
             utility_class_name: 'Utils?$'
             constant_name: '^[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*$'
             property_name: '^[a-z][a-z_0-9]*$'

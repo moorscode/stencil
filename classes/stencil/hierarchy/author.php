@@ -16,7 +16,7 @@ class Stencil_Hierarchy_Author extends Stencil_Abstract_Hierarchy {
 		$author  = get_queried_object();
 		$options = array();
 
-		if ( $author instanceof WP_User ) {
+		if ( class_exists( 'WP_User') && $author instanceof WP_User ) {
 			$options[] = 'single/author' . $author->user_nicename;
 			$options[] = 'author-' . $author->user_nicename;
 

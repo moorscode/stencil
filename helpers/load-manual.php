@@ -69,10 +69,10 @@ function __stencil_sort_include_files( $a, $b ) {
 	}
 
 	// Same with abstract classes.
-	$a_interface = strpos( $a_file, 'abstract_' ) === 0;
-	$b_interface = strpos( $b_file, 'abstract_' ) === 0;
-	if ( $a_interface ^ $b_interface ) {
-		return ( false !== $a_interface && false === $b_interface ) ? - 1 : 1;
+	$a_abstract = strpos( $a_file, 'abstract_' ) === 0;
+	$b_abstract = strpos( $b_file, 'abstract_' ) === 0;
+	if ( $a_abstract ^ $b_abstract ) {
+		return ( false !== $a_abstract && false === $b_abstract ) ? - 1 : 1;
 	}
 
 	// Load Stencil before anything else.

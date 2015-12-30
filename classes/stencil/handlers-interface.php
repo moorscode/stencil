@@ -14,6 +14,8 @@ interface Stencil_Handlers_Interface {
 	 *
 	 * @param string            $page Page to set.
 	 * @param array|Traversable $handler Handler to use.
+	 *
+	 * @return void
 	 */
 	public function set_hierarchy_handler( $page, $handler );
 
@@ -22,6 +24,8 @@ interface Stencil_Handlers_Interface {
 	 *
 	 * @param string   $page Page to set.
 	 * @param callable $handler Handler to use.
+	 *
+	 * @return void
 	 */
 	public function set_page_type_handler( $page, $handler );
 
@@ -30,6 +34,8 @@ interface Stencil_Handlers_Interface {
 	 *
 	 * @param string   $page Page to set to.
 	 * @param callable $handler Handler to use.
+	 *
+	 * @return void
 	 */
 	public function set_page_type_hooker( $page, $handler );
 
@@ -37,6 +43,8 @@ interface Stencil_Handlers_Interface {
 	 * Remove handler for a page.
 	 *
 	 * @param string $page Page to remove from.
+	 *
+	 * @return void
 	 */
 	public function remove_page_type_handler( $page );
 
@@ -44,6 +52,8 @@ interface Stencil_Handlers_Interface {
 	 * Remove page hooker from page
 	 *
 	 * @param string $page Page to remove from.
+	 *
+	 * @return void
 	 */
 	public function remove_page_type_hooker( $page );
 }
