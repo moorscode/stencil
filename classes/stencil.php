@@ -307,17 +307,6 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	}
 
 	/**
-	 * Get the path for a specific resource/directory
-	 *
-	 * @param string $type Name of the resource/directory to get the path for.
-	 *
-	 * @return bool|string
-	 */
-	public function path( $type ) {
-		return Stencil_File_System::get( $type );
-	}
-
-	/**
 	 * Run the main process
 	 *
 	 * @param string|null $page Optional. Fake a certain page.
