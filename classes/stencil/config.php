@@ -190,29 +190,30 @@ class Stencil_Config {
 			return;
 		}
 
-		if ( isset( $install_plugins['plugin'] ) && is_array( $install_plugins['plugin'] ) ) {
+		if ( ! isset( $install_plugins['plugin'] ) || ! is_array( $install_plugins['plugin'] ) ) {
+			return;
+		}
 
-			printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
+		printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
 
-			foreach ( $install_plugins['plugin'] as $slug => $on ) {
+		foreach ( $install_plugins['plugin'] as $slug => $on ) {
 
-				$installed = $this->install_plugin( $slug );
+			$installed = $this->install_plugin( $slug );
 
-				if ( ! $installed ) {
-					printf(
-						'<em>%s</em><br>',
-						sprintf(
-							__( 'Plugin %s could not be installed!', 'stencil' ),
-							$this->known_implementations[ $slug ]
-						)
-					);
-				}
-
-				unset( $install_plugins['plugin'][ $slug ] );
+			if ( ! $installed ) {
+				printf(
+					'<em>%s</em><br>',
+					sprintf(
+						__( 'Plugin %s could not be installed!', 'stencil' ),
+						$this->known_implementations[ $slug ]
+					)
+				);
 			}
 
-			printf( '<b>%s</b>', __( 'Done.', 'stencil' ) );
+			unset( $install_plugins['plugin'][ $slug ] );
 		}
+
+		printf( '<b>%s</b>', __( 'Done.', 'stencil' ) );
 
 		if ( empty( $install_plugins['plugin'] ) ) {
 			unset( $install_plugins['plugin'] );
