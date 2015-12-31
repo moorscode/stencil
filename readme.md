@@ -10,6 +10,7 @@ To use Stencil you need two things:
 1. An implementation plugin, which provides an engine
 1. A few lines of code in your theme to activate Stencil and let it know what you need
 
+Fortunately Stencil provides a settings page where you can easily install an Implementation and sample theme.
 
 Stencil requires your theme to have a specific basic structure.
 There are few requirements and a couple of starter themes to get you familiar with the

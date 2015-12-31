@@ -124,6 +124,36 @@ class Stencil_Config {
 	}
 
 	/**
+	 * Show the settings
+	 */
+	public function settings_page() {
+
+		/**
+		 * Show a list of known implementations
+		 * Mark installed ones
+		 * Provide checkbox to (bulk) install optional ones
+		 */
+
+		print( '<div class="wrap">' );
+		printf( '<h2>%s</h2>', __( 'Stencil settings', 'stencil' ) );
+
+		$this->maybe_install_plugins();
+		$this->maybe_install_themes();
+
+		print( '<form method="post" action="options.php">' );
+
+		settings_fields( $this->option_group );
+		do_settings_sections( $this->option_page );
+		submit_button( __( 'Install selected item(s)', 'stencil' ) );
+
+		print( '</form>' );
+
+		printf( '<p><em>%s</em></p>', __( 'Note that plugins do not update because they are provided via github, not the WordPress plugin directory.', 'stencil' ) );
+
+		print( '</div>' );
+	}
+
+	/**
 	 * Show plugins that are not installed yet (but tracked)
 	 * Check to install; installed plugins are grayed out and checked
 	 * but are ignored on save.
@@ -165,54 +195,6 @@ class Stencil_Config {
 				! empty( $error ) ? sprintf( ' <small>(%s)</small>', $error ) : ''
 			);
 		}
-	}
-
-	/**
-	 * Show plugins that are not installed yet (but tracked)
-	 * Check to install; installed plugins are grayed out and checked
-	 * but are ignored on save.
-	 */
-	public function option_themes() {
-		foreach ( $this->sample_themes as $slug => $name ) {
-			/**
-			 * Disable input if plugin is installed.
-			 */
-			printf(
-				'<label><input type="checkbox" name="%s">%s</label><br>',
-				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $slug ) ),
-				esc_html( $name )
-			);
-		}
-	}
-
-	/**
-	 * Show the settings
-	 */
-	public function settings_page() {
-
-		/**
-		 * Show a list of known implementations
-		 * Mark installed ones
-		 * Provide checkbox to (bulk) install optional ones
-		 */
-
-		print( '<div class="wrap">' );
-		printf( '<h2>%s</h2>', __( 'Stencil settings', 'stencil' ) );
-
-		$this->maybe_install_plugins();
-		$this->maybe_install_themes();
-
-		print( '<form method="post" action="options.php">' );
-
-		settings_fields( $this->option_group );
-		do_settings_sections( $this->option_page );
-		submit_button( __( 'Install selected item(s)', 'stencil' ) );
-
-		print( '</form>' );
-
-		printf( '<p><em>%s</em></p>', __( 'Note that plugins do not update because they are provided via github, not the WordPress plugin directory.', 'stencil' ) );
-
-		print( '</div>' );
 	}
 
 	/**
@@ -263,6 +245,55 @@ class Stencil_Config {
 	}
 
 	/**
+	 * Install plugin by slug
+	 *
+	 * @param string $slug Plugin slug.
+	 *
+	 * @return bool
+	 */
+	public function install_plugin( $slug ) {
+		$download_link = $this->get_plugin_download_link( $slug );
+
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		iframe_header();
+		$upgrader = new Plugin_Upgrader( new Plugin_Installer_Skin( array() ) );
+		$upgrader->install( $download_link );
+		iframe_footer();
+
+		return true;
+	}
+
+	/**
+	 * Get the download link for the plugin
+	 *
+	 * @param string $slug Plugin slug.
+	 *
+	 * @return string
+	 */
+	private function get_plugin_download_link( $slug ) {
+		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
+	}
+
+	/**
+	 * Show plugins that are not installed yet (but tracked)
+	 * Check to install; installed plugins are grayed out and checked
+	 * but are ignored on save.
+	 */
+	public function option_themes() {
+		foreach ( $this->sample_themes as $slug => $name ) {
+			/**
+			 * Disable input if plugin is installed.
+			 */
+			printf(
+				'<label><input type="checkbox" name="%s">%s</label><br>',
+				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $slug ) ),
+				esc_html( $name )
+			);
+		}
+	}
+
+	/**
 	 * Install selected themes
 	 */
 	public function maybe_install_themes() {
@@ -307,37 +338,6 @@ class Stencil_Config {
 
 		update_option( $this->option_name, $install_plugins );
 
-	}
-
-	/**
-	 * Install plugin by slug
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return bool
-	 */
-	public function install_plugin( $slug ) {
-		$download_link = $this->get_plugin_download_link( $slug );
-
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-		iframe_header();
-		$upgrader = new Plugin_Upgrader( new Plugin_Installer_Skin( array() ) );
-		$upgrader->install( $download_link );
-		iframe_footer();
-
-		return true;
-	}
-
-	/**
-	 * Get the download link for the plugin
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return string
-	 */
-	private function get_plugin_download_link( $slug ) {
-		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
 	}
 
 	/**
