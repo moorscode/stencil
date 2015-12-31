@@ -1,18 +1,18 @@
+#, fuzzy
 msgid ""
 msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Stencil\n"
-"POT-Creation-Date: 2015-12-31 17:57+0100\n"
-"PO-Revision-Date: 2015-12-31 17:59+0100\n"
+"POT-Creation-Date: 2015-12-31 17:50+0100\n"
+"PO-Revision-Date: 2015-12-31 17:50+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: nl_NL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 1.8.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: stencil.php\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
@@ -26,54 +26,50 @@ msgid ""
 "<em>Theme - Implementation conflict</em>. The active theme requires the "
 "Stencil Implementation: <em>%s</em> to be active."
 msgstr ""
-"<em>Thema - Implementatie conflict.</em> Het actieve thema vereist dat de "
-"Stencil Implementatie: <em>%s</em> actief is."
 
 #: classes/stencil/config.php:74
 msgid "Stencil implementations"
-msgstr "Stencil implementaties"
+msgstr ""
 
 #: classes/stencil/config.php:98
 msgid "Implementations"
-msgstr "Implementaties"
+msgstr ""
 
 #: classes/stencil/config.php:121
 #, php-format
 msgid "PHP version %s required, %s available."
-msgstr "PHP versie %s vereist, %s beschikbaar."
+msgstr ""
 
 #: classes/stencil/config.php:161
 msgid "Stencil settings"
-msgstr "Stencil instellingen"
+msgstr ""
 
 #: classes/stencil/config.php:169
 msgid "Install selected implementation(s)"
-msgstr "Installeer geselecteerde implementatie(s)"
+msgstr ""
 
 #: classes/stencil/config.php:194
 msgid "Installing plugins..."
-msgstr "Plugins installeren…"
+msgstr ""
 
 #: classes/stencil/config.php:204
 #, php-format
 msgid "Plugin %s could not be installed!"
-msgstr "Plugin %s kon niet worden geïnstalleerd!"
+msgstr ""
 
 #: classes/stencil/config.php:213
 msgid "Done."
-msgstr "Klaar."
+msgstr ""
 
 #: register.php:37
 msgid "The plugin <em>\"Stencil\"</em> needs to be activated."
-msgstr "De plugin <em>”Stencil”</em> moet geactiveerd zijn."
+msgstr ""
 
 #: stencil.php:45
 msgid ""
 "A class named \"Stencil\" exists. This means that the plugin \"Stencil\" can "
 "not operate."
 msgstr ""
-"Een class met de naam “Stencil” bestaat al. Dit betekent dat de plugin "
-"“Stencil” niet kan werken."
 
 #. Plugin Name of the plugin/theme
 msgid "Stencil"
@@ -90,10 +86,6 @@ msgid ""
 "and be up and running in no time. Addons available for Smarty 2, Smarty 3, "
 "Twig and more!"
 msgstr ""
-"Altijd al een “echte” template engine willen gebruiken om je thema op te "
-"bouwen? Met Stencil kan dat nu! Activeer de Addon van de implementatie die "
-"jij wilt gebruiken en je thema is zo maar klaar. Adonis beschikbaar voor "
-"Smarty 2, Smarty 3, Twig en meer!"
 
 #. Author of the plugin/theme
 msgid "Jip Moors (moorscode)"
