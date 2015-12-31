@@ -43,29 +43,30 @@ class Stencil_Flow implements Stencil_Flow_Interface {
 		 * Actions to be executed
 		 */
 		$actions = array(
-			'Always'
+			'always'
 		);
 
 		// Singular = single item (post, attachment, page, etc).
 		if ( is_singular() ) {
-			$actions[] = 'Singular';
+			$actions[] = 'singular';
 		}
 
 		// Paged page (pagination).
 		if ( is_paged() ) {
-			$actions[] = 'Paged';
+			$actions[] = 'paged';
 		}
 
 		if ( is_sticky() ) {
-			$actions[] = 'Sticky';
+			$actions[] = 'sticky';
 		}
 
 		if ( is_user_logged_in() ) {
-			$actions[] = 'LoggedIn';
+			$actions[] = 'logged-in';
+			$actions[] = 'loggedin';
 		}
 
 		if ( in_array( $page, $this->archive_pages, true ) || 'home' === $page ) {
-			$actions[] = 'Archived';
+			$actions[] = 'archived';
 		}
 
 		// Add page action.
