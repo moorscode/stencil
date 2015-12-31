@@ -330,11 +330,12 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 	 */
 	protected function internal_fetch( $template, $from ) {
 		if ( ! is_null( $this->recording_for ) ) {
-			throw new LogicException( sprintf( 'Stencil: trying to display template but still recording for "%s".', $this->recording_for ) );
+			throw new LogicException( sprintf( 'Stencil: trying to fetch view %s but still recording for "%s".', $template, $this->recording_for ) );
 		}
 
 		$implementation = $this->get_implementation();
 
+		// Hook pre_fetch / pre_display.
 		Stencil_Environment::trigger( 'pre_' . $from, $template );
 
 		// Make sure undefined index errors are not caught; template engines don't check for these.
@@ -359,6 +360,7 @@ class Stencil_Handler implements Stencil_Handler_Interface, Stencil_Implementati
 			echo $fetched;
 		}
 
+		// Hook post_fetch / post_display.
 		Stencil_Environment::trigger( 'post_' . $from, $template );
 
 		if ( 'fetch' === $from ) {
