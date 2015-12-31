@@ -183,11 +183,11 @@ class Stencil_Config {
 		 */
 		$install_plugins = get_option( $this->option_name );
 
-		if ( empty( $install_plugins ) || ! is_array( $install_plugins ) ) {
-			return;
-		}
-
-		if ( ! isset( $install_plugins['plugin'] ) || ! is_array( $install_plugins['plugin'] ) ) {
+		if (
+			empty( $install_plugins ) ||
+			! isset( $install_plugins['plugin'] ) ||
+			! is_array( $install_plugins['plugin'] )
+		) {
 			return;
 		}
 
