@@ -12,12 +12,12 @@ interface Stencil_Handler_Factory_Interface {
 	/**
 	 * Set a hierarchy handler for a page
 	 *
-	 * @param string            $page Page to set.
-	 * @param array|Traversable $handler Handler to use.
+	 * @param string                 $page Page to set.
+	 * @param array|Traversable|null $handler Handler to use.
 	 *
 	 * @return void
 	 */
-	public static function set_hierarchy_handler( $page, $handler );
+	public static function set_hierarchy_handler( $page, $handler = null );
 
 	/**
 	 * Set a page type handler
@@ -83,4 +83,20 @@ interface Stencil_Handler_Factory_Interface {
 	 * @return callable
 	 */
 	public static function get_page_type_hooker( $page );
+
+	/**
+	 * Run the handler for the specified page
+	 *
+	 * @param string                    $page Page to call handler for
+	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 */
+	public static function run_page_type_handler( $page, Stencil_Handler_Interface $controller );
+
+	/**
+	 * Run the hooker for the specified page
+	 *
+	 * @param string                    $page Page to call handler for
+	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 */
+	public static function run_page_type_hook( $page, Stencil_Handler_Interface $controller );
 }
