@@ -47,6 +47,7 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 * Boot up the main Stencil flow
 	 *
 	 * Triggered by the {FILTER_PREFIX}engine_ready hook
+	 * @see Environment::format_hook
 	 *
 	 * @param Stencil_Implementation $engine Boot Stencil with the supplied engine.
 	 */
@@ -69,9 +70,11 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 * @param Stencil_Implementation $engine Initilize Stencil with the supplied engine.
 	 */
 	private function __construct( Stencil_Implementation $engine ) {
-		// Set the handler.
+		// Set the handler class.
 		self::$default_implementation_class = get_class( $engine );
-		self::$handler                      = $this->get_handler( $engine );
+
+		// Set the internal handler.
+		self::$handler = $this->get_handler( $engine );
 
 		// Flow is irrelevant for AJAX calls; as are header and footers.
 		if ( ! defined( 'DOING_AJAX' ) || false === DOING_AJAX ) {
@@ -122,7 +125,10 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * @return Stencil_Handler
 	 */
-	public static function get_handler( Stencil_Implementation $implementation = null, Stencil_Recorder_Interface $recorder = null ) {
+	public static function get_handler(
+		Stencil_Implementation $implementation = null,
+		Stencil_Recorder_Interface $recorder = null
+	) {
 		/**
 		 * Use "default" implementation if none supplied
 		 */
@@ -377,7 +383,7 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 				 */
 				$assets_path = Stencil_Environment::filter( 'assets_path', 'assets' );
 				if ( ! empty( $assets_path ) ) {
-					$cache = $base . '/' . $assets_path;
+					$cache = $base . DIRECTORY_SEPARATOR . $assets_path;
 				}
 			}
 
