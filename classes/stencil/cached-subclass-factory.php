@@ -21,11 +21,11 @@ class Stencil_Cached_Subclass_Factory extends Stencil_Subclass_Factory {
 		static $cache = array();
 
 		if ( ! isset( $cache[ $prefix ] ) ) {
-			$cache[ $prefix ] = array( $page => parent::create_or_null( $page, $prefix ) );
-		} else {
-			if ( ! isset( $cache[ $prefix ][ $page ] ) ) {
-				$cache[ $prefix ][ $page ] = parent::create_or_null( $page, $prefix );
-			}
+			$cache[ $prefix ] = array();
+		}
+
+		if ( ! isset( $cache[ $prefix ][ $page ] ) ) {
+			$cache[ $prefix ][ $page ] = parent::create_or_null( $page, $prefix );
 		}
 
 		return $cache[ $prefix ][ $page ];
