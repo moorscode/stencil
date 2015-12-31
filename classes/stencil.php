@@ -86,6 +86,7 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 		 * Append the 'assets' directory to the template URI for easy access
 		 */
 		add_filter( 'template_directory_uri', array( $this, 'append_assets_directory' ) );
+		add_filter( 'stylesheet_directory_uri', array( $this, 'append_assets_directory' ) );
 
 		/**
 		 * Make sure we only load index.php
@@ -253,11 +254,22 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * HandlerFactory proxy functions
 	 *
-	 * @param string            $type Page Type to set for.
-	 * @param array|Traversable $handler Handler that will provide hierarchy for specified page.
+	 * @param string                 $page Page Type to set for.
+	 * @param array|Traversable|null $handler Optional. Handler that will provide hierarchy for specified page.
 	 */
-	public function set_hierarchy_handler( $type, $handler ) {
-		Stencil_Handler_Factory::set_hierarchy_handler( $type, $handler );
+	public function set_hierarchy( $page, $handler ) {
+		Stencil_Handler_Factory::set_hierarchy_handler( $page, $handler = null );
+	}
+
+	/**
+	 * Remove all view options for a page
+	 *
+	 * This will make the page be displayed with the 'index' view
+	 *
+	 * @param string $page Page to remove hierarchy of
+	 */
+	public function remove_hierarchy( $page ) {
+		Stencil_Handler_Factory::set_hierarchy_handler( $page );
 	}
 
 	/**
@@ -265,11 +277,11 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * HandlerFactory proxy functions
 	 *
-	 * @param string   $type Page Type to set for.
+	 * @param string   $page Page to set for.
 	 * @param callable $handler Handler that will be executed for specified page.
 	 */
-	public function set_page_type_handler( $type, $handler ) {
-		Stencil_Handler_Factory::set_page_type_handler( $type, $handler );
+	public function set_page_type_handler( $page, $handler ) {
+		Stencil_Handler_Factory::set_page_type_handler( $page, $handler );
 	}
 
 	/**
@@ -277,11 +289,11 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * HandlerFactory proxy functions
 	 *
-	 * @param string   $type Page Type to set for.
+	 * @param string   $page Page to set for.
 	 * @param callable $handler Hooker that will be executed for specified page.
 	 */
-	public function set_page_type_hooker( $type, $handler ) {
-		Stencil_Handler_Factory::set_page_type_hooker( $type, $handler );
+	public function set_page_type_hooker( $page, $handler ) {
+		Stencil_Handler_Factory::set_page_type_hooker( $page, $handler );
 	}
 
 	/**
@@ -289,10 +301,10 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * HandlerFactory proxy functions
 	 *
-	 * @param string $type Page Type to remove handler of.
+	 * @param string $page Page Type to remove handler of.
 	 */
-	public function remove_page_type_handler( $type ) {
-		Stencil_Handler_Factory::remove_page_type_handler( $type );
+	public function remove_page_type_handler( $page ) {
+		Stencil_Handler_Factory::remove_page_type_handler( $page );
 	}
 
 	/**
@@ -300,10 +312,10 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 	 *
 	 * HandlerFactory proxy functions
 	 *
-	 * @param string $type Page Type to remove hooker of.
+	 * @param string $page Page Type to remove hooker of.
 	 */
-	public function remove_page_type_hooker( $type ) {
-		Stencil_Handler_Factory::remove_page_type_hooker( $type );
+	public function remove_page_type_hooker( $page ) {
+		Stencil_Handler_Factory::remove_page_type_hooker( $page );
 	}
 
 	/**

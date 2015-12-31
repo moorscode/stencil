@@ -26,22 +26,14 @@ class Stencil_Page_Type_Page extends Stencil_Abstract_Page_Type {
 		$page_template = get_page_template();
 		if ( $page_template ) {
 
+			// Always include template file.
+			include $page_template;
+
 			$page_template_base = basename( $page_template );
-			$page_template_pure = str_replace( '.php', '', $page_template_base );
 
-			$path = dirname( $page_template );
+			Stencil_File_System::load( $page_template_base );
 
-			$check = $path . '/models/' . $page_template_base;
-			if ( is_file( $check ) ) {
-				load_template( $check, true );
-			} else {
-				$check = $path . '/' . $page_template_base;
-				if ( is_file( $check ) ) {
-					load_template( $check, true );
-				}
-			}
-
-			Stencil_Environment::trigger( $page_template_pure, $controller );
+			Stencil_Environment::trigger( rtrim( $page_template_base, '.php' ), $controller );
 			Stencil_Environment::trigger( $page_template_base, $controller );
 
 		}

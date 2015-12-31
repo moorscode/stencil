@@ -19,11 +19,11 @@ class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
 	/**
 	 * Set a hierarchy handler for a page
 	 *
-	 * @param string            $page Page to set.
-	 * @param array|Traversable $handler Handler to use.
+	 * @param string                 $page Page to set.
+	 * @param array|Traversable|null $handler Optional. Handler to use.
 	 */
-	public static function set_hierarchy_handler( $page, $handler ) {
-		self::set_settable_handler( 'Hierarchy', $page, $handler );
+	public static function set_hierarchy_handler( $page, $handler = null ) {
+		self::set_settable_handler( 'Hierarchy', $page, $handler = null );
 	}
 
 	/**

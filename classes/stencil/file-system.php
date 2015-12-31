@@ -24,6 +24,10 @@ class Stencil_File_System {
 		 */
 		$directory = Stencil_Environment::filter( 'path-controllers', 'controllers' );
 
+		if ( empty( $directory ) ) {
+			return false;
+		}
+
 		$paths = self::get_potential_directories( $directory );
 		foreach ( $paths as $path ) {
 			if ( is_file( $path . $file ) ) {
@@ -58,7 +62,7 @@ class Stencil_File_System {
 		}
 
 		$paths = array(
-			implode( DIRECTORY_SEPARATOR, array( $theme_root, $sub_directory, '' ) )
+			implode( DIRECTORY_SEPARATOR, array( $theme_root, $sub_directory, '' ) ),
 		);
 
 		// First check child theme.

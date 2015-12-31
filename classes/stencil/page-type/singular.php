@@ -19,7 +19,7 @@ class Stencil_Page_Type_Singular extends Stencil_Abstract_Page_Type {
 		/**
 		 * Filter: force the page to have the permalink presentation
 		 */
-		$force_permalink = Stencil_Environment::filter( 'force_permalink', true );
+		$force_permalink = Stencil_Environment::filter( 'force_permalink', false );
 		if ( $force_permalink ) {
 			$url       = $controller->get( 'self' );
 			$permalink = get_permalink();

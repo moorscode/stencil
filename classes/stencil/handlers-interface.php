@@ -17,7 +17,7 @@ interface Stencil_Handlers_Interface {
 	 *
 	 * @return void
 	 */
-	public function set_hierarchy_handler( $page, $handler );
+	public function set_hierarchy( $page, $handler );
 
 	/**
 	 * Set a page type handler
