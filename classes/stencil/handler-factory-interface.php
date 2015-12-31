@@ -89,6 +89,8 @@ interface Stencil_Handler_Factory_Interface {
 	 *
 	 * @param string                    $page Page to call handler for
 	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 *
+	 * @return void
 	 */
 	public static function run_page_type_handler( $page, Stencil_Handler_Interface $controller );
 
@@ -97,6 +99,8 @@ interface Stencil_Handler_Factory_Interface {
 	 *
 	 * @param string                    $page Page to call handler for
 	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 *
+	 * @return void
 	 */
 	public static function run_page_type_hook( $page, Stencil_Handler_Interface $controller );
 }
