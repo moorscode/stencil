@@ -228,40 +228,26 @@ class Stencil_Config {
 	 * @return bool
 	 */
 	public function install_plugin( $slug ) {
+		$download_link = $this->get_download_link( $slug );
 
-		include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-		$api = plugins_api(
-			'plugin_information',
-			array(
-				'slug'   => $slug,
-				'fields' => array(
-					'short_description' => false,
-					'sections'          => false,
-					'requires'          => false,
-					'rating'            => false,
-					'ratings'           => false,
-					'downloaded'        => false,
-					'last_updated'      => false,
-					'added'             => false,
-					'tags'              => false,
-					'compatibility'     => false,
-					'homepage'          => false,
-					'donate_link'       => false,
-				),
-			)
-		);
-
-		if ( is_wp_error( $api ) ) {
-			return false;
-		}
 
 		iframe_header();
 		$upgrader = new Plugin_Upgrader( new Plugin_Installer_Skin( array() ) );
-		$upgrader->install( $api->download_link );
+		$upgrader->install( $download_link );
 		iframe_footer();
 
 		return true;
+	}
+
+	/**
+	 * Get the download link for the plugin
+	 *
+	 * @param string $slug Plugin slug.
+	 *
+	 * @return string
+	 */
+	private function get_download_link( $slug ) {
+		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
 	}
 }

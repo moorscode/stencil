@@ -46,16 +46,10 @@ class Stencil_Bootstrap {
 
 		/**
 		 * Boot up config if we are in the CMS.
-		 *
-		 * @note This only works like intended when one or more plugins have been added to the WordPress plugin directory!
-		 * So it is disabled for now...
 		 */
-
-		/*
-		 * if ( is_admin() ) {
-		 *	new Stencil_Config();
-		 *}
-		 */
+		if ( is_admin() ) {
+			new Stencil_Config();
+		}
 	}
 
 	/**
