@@ -23,12 +23,12 @@ class Stencil_Hierarchy_Single extends Stencil_Abstract_Hierarchy {
 
 				if ( ! empty( $attachment->post_mime_type ) ) {
 					$mime_type = $attachment->post_mime_type;
-					$types     = explode( '/', $mime_type );
+					$types     = explode( '/', $mime_type, 2 );
 
 					$options[] = 'single/' . $types[0];
 					$options[] = $types[0];
 
-					if ( isset( $types[1] ) && ! empty( $types[1] ) ) {
+					if ( ! empty( $types[1] ) ) {
 						$options[] = 'single/' . $types[1];
 						$options[] = $types[1];
 
@@ -43,7 +43,7 @@ class Stencil_Hierarchy_Single extends Stencil_Abstract_Hierarchy {
 
 			default:
 				$post = get_queried_object();
-				if ( $post->post_name ) {
+				if ( ! empty( $post->post_name ) ) {
 					$options[] = 'single/' . $post->post_name;
 					$options[] = $post->post_name;
 				}
