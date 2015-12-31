@@ -170,6 +170,8 @@ class Stencil_Config {
 
 		print( '</form>' );
 
+		printf( '<p><em>%s</em></p>', __( 'Note that plugins do not update because they are provided via github, not the WordPress plugin directory.', 'stencil' ) );
+
 		print( '</div>' );
 	}
 
