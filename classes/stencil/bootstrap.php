@@ -62,7 +62,7 @@ class Stencil_Bootstrap {
 		$required       = Stencil_Environment::filter( 'require', false );
 
 		if ( $implementation !== $required ) {
-			$message = __( '<em>Theme Addon conflict</em>. The active theme requires the Stencil Implementation: <em>%s</em> to be active.', 'stencil' );
+			$message = __( '<em>Theme - Implementation conflict</em>. The active theme requires the Stencil Implementation: <em>%s</em> to be active.', 'stencil' );
 			$message = sprintf( $message, $required );
 
 			Stencil_Feedback::notification( 'error', $message );

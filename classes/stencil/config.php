@@ -71,8 +71,8 @@ class Stencil_Config {
 	public function create_admin_menu() {
 		// Create new top-level menu.
 		add_menu_page(
-			__( 'Stencil Implementations', 'stencil' ),
-			__( 'Stencil', 'stencil' ),
+			__( 'Stencil implementations', 'stencil' ),
+			'Stencil',
 			'install_plugins',
 			'stencil-implementations',
 			array( $this, 'settings_page' )
