@@ -1,5 +1,8 @@
 # Stencil
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/moorscode/stencil/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/moorscode/stencil/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/moorscode/stencil/badges/build.png?b=master)](https://scrutinizer-ci.com/g/moorscode/stencil/build-status/master)
+
 Stencil gives you the power to use a proper template engine in your WordPress theme.
 
 To use Stencil you need two things:
