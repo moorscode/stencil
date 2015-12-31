@@ -64,6 +64,7 @@ function __stencil_sort_include_files( $a, $b ) {
 	// Always load interfaces first.
 	$a_interface = strpos( $a_file, '_interface.php' );
 	$b_interface = strpos( $b_file, '_interface.php' );
+	// ^ = xor, a or b but not both.
 	if ( $a_interface ^ $b_interface ) {
 		return ( false !== $a_interface && false === $b_interface ) ? - 1 : 1;
 	}
@@ -71,6 +72,7 @@ function __stencil_sort_include_files( $a, $b ) {
 	// Same with abstract classes.
 	$a_abstract = strpos( $a_file, 'abstract_' ) === 0;
 	$b_abstract = strpos( $b_file, 'abstract_' ) === 0;
+	// ^ = xor, a or b but not both.
 	if ( $a_abstract ^ $b_abstract ) {
 		return ( false !== $a_abstract && false === $b_abstract ) ? - 1 : 1;
 	}
