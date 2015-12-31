@@ -338,15 +338,8 @@ final class Stencil implements Stencil_Interface, Stencil_Handlers_Interface, St
 		if ( is_array( $actions ) && array() !== $actions ) {
 			foreach ( $actions as $action ) {
 				// Apply variables.
-				$handler = Stencil_Handler_Factory::get_page_type_handler( $action );
-				if ( is_callable( $handler ) ) {
-					call_user_func( $handler, $this );
-				}
-
-				$hooker = Stencil_Handler_Factory::get_page_type_hooker( $action );
-				if ( is_callable( $hooker ) ) {
-					call_user_func( $hooker, $this );
-				}
+				Stencil_Handler_Factory::run_page_type_handler( $action, $this );
+				Stencil_Handler_Factory::run_page_type_hook( $action, $this );
 			}
 		}
 

@@ -98,6 +98,38 @@ class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
 	}
 
 	/**
+	 * Run the handler for the specified page
+	 *
+	 * @param string $page Page to call handler for
+	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 */
+	public static function run_page_type_handler( $page, Stencil_Handler_Interface $controller ) {
+		self::execute_handler( self::get_page_type_handler( $page ), $controller );
+	}
+
+	/**
+	 * Run the hooker for the specified page
+	 *
+	 * @param string $page Page to call handler for
+	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 */
+	public static function run_page_type_hook( $page, Stencil_Handler_Interface $controller ) {
+		self::execute_handler( self::get_page_type_hooker( $page ), $controller );
+	}
+
+	/**
+	 * Execute a handler if it is callable
+	 *
+	 * @param string $handler The handler for the page requested
+	 * @param Stencil_Handler_Interface $controller Controller that initiated the call
+	 */
+	private static function execute_handler( $handler, Stencil_Handler_Interface $controller ) {
+		if ( is_callable( $handler ) ) {
+			call_user_func( $handler, $controller );
+		}
+	}
+
+	/**
 	 * Unified setter function
 	 *
 	 * @param string     $type Type of object.
