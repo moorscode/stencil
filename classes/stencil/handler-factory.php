@@ -9,6 +9,12 @@
  * Class HandlerFactory
  */
 class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
+
+	/**
+	 * Format the class name:
+	 */
+	const CLASS_FORMAT = 'Stencil_%s';
+
 	/**
 	 * List of registered Handlers
 	 *
@@ -141,7 +147,7 @@ class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
 	private static function set_settable_handler( $type, $page, $handler = null ) {
 		// Create NullObject for empty handler, i.e. remove functionality.
 		if ( empty( $handler ) ) {
-			$handler = Stencil_Subclass_Factory::create_null( sprintf( 'Stencil_%s', $type ) );
+			$handler = Stencil_Subclass_Factory::create_null( sprintf( self::CLASS_FORMAT, $type ) );
 		}
 
 		switch ( $type ) {
@@ -171,7 +177,7 @@ class Stencil_Handler_Factory implements Stencil_Handler_Factory_Interface {
 	 */
 	private static function get_settable_handler( $page, $type ) {
 		if ( ! isset( self::$handlers[ $type ][ $page ] ) ) {
-			$handler = Stencil_Cached_Subclass_Factory::create_or_null( $page, sprintf( 'Stencil_%s', $type ) );
+			$handler = Stencil_Cached_Subclass_Factory::create_or_null( $page, sprintf( self::CLASS_FORMAT, $type ) );
 
 			switch ( $type ) {
 				case 'Hierarchy':
