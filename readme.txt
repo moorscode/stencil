@@ -8,18 +8,18 @@ Stable tag: 1.0
 License: GPL2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-
 Stencil is an interface plugin that enables the use of templating engines to be used for themeing.
 
 == Description ==
-Stencil is an interface plugin that enables the use of templating engines to be used for themeing.
-You need to install and activate the Stencil Implementation that implements the templating engine that you want.
+Stencil is a plugin that enables the use of templating engines in your theme.
+You need to install and activate a Stencil Implementation that implements the templating engine that you need.
 
-Multiple Addons have been created by us and are available in the repository or at http://www.jipmoors/stencil/addons/
+Multiple Implementations have been created by us and are available in the plugin directory or at https://github.com/moorscode/stencil/
 
-If you need help to get started on your theme (or just need a clean slate with optimal structure)
+If you need help to get started on your theme (or just need a clean slate with an optimal structure)
 feel free to using one of our example themes that we have created for you!
-Check them out at http://gho.nl/stencil/sample-themes/
+
+Check them out at https://github.com/moorscode/stencil/
 
 == Installation ==
 1. Upload the folder `stencil` to the `/wp-content/plugins/` directory or use the WordPress build in plugin-installer
