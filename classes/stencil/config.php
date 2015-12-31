@@ -26,6 +26,19 @@ class Stencil_Config {
 	);
 
 	/**
+	 * Sample themes
+	 *
+	 * @var array
+	 */
+	private $sample_themes = array(
+		'dwoo2'    => 'Dwoo',
+		'mustache' => 'Mustache',
+		'savant'   => 'Savant',
+		'smarty'   => 'Smarty',
+		'twig'     => 'Twig',
+	);
+
+	/**
 	 * Implementations that require a specific minimal PHP version
 	 *
 	 * @var array
@@ -100,6 +113,14 @@ class Stencil_Config {
 			$this->option_page,
 			'stencil-implementations'
 		);
+
+		add_settings_field(
+			'themes',
+			__( 'Sample themes', 'stencil' ),
+			array( $this, 'option_themes' ),
+			$this->option_page,
+			'stencil-implementations'
+		);
 	}
 
 	/**
@@ -147,6 +168,24 @@ class Stencil_Config {
 	}
 
 	/**
+	 * Show plugins that are not installed yet (but tracked)
+	 * Check to install; installed plugins are grayed out and checked
+	 * but are ignored on save.
+	 */
+	public function option_themes() {
+		foreach ( $this->sample_themes as $slug => $name ) {
+			/**
+			 * Disable input if plugin is installed.
+			 */
+			printf(
+				'<label><input type="checkbox" name="%s">%s</label><br>',
+				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $slug ) ),
+				esc_html( $name )
+			);
+		}
+	}
+
+	/**
 	 * Show the settings
 	 */
 	public function settings_page() {
@@ -161,12 +200,13 @@ class Stencil_Config {
 		printf( '<h2>%s</h2>', __( 'Stencil settings', 'stencil' ) );
 
 		$this->maybe_install_plugins();
+		$this->maybe_install_themes();
 
 		print( '<form method="post" action="options.php">' );
 
 		settings_fields( $this->option_group );
 		do_settings_sections( $this->option_page );
-		submit_button( __( 'Install selected implementation(s)', 'stencil' ) );
+		submit_button( __( 'Install selected item(s)', 'stencil' ) );
 
 		print( '</form>' );
 
@@ -223,6 +263,53 @@ class Stencil_Config {
 	}
 
 	/**
+	 * Install selected themes
+	 */
+	public function maybe_install_themes() {
+		/**
+		 * When a plugin can be updated; the field will be check on the settings
+		 * When all plugins have been installed, they disappear from the list.
+		 */
+		$install_plugins = get_option( $this->option_name );
+
+		if (
+			empty( $install_plugins ) ||
+			! isset( $install_plugins['theme'] ) ||
+			! is_array( $install_plugins['theme'] )
+		) {
+			return;
+		}
+
+		printf( '<h2>%s</h2>', __( 'Installing themes...', 'stencil' ) );
+
+		foreach ( $install_plugins['theme'] as $slug => $on ) {
+
+			$installed = $this->install_theme( $slug );
+
+			if ( ! $installed ) {
+				printf(
+					'<em>%s</em><br>',
+					sprintf(
+						__( 'Theme %s could not be installed!', 'stencil' ),
+						$this->known_implementations[ $slug ]
+					)
+				);
+			}
+
+			unset( $install_plugins['theme'][ $slug ] );
+		}
+
+		printf( '<b>%s</b>', __( 'Done.', 'stencil' ) );
+
+		if ( empty( $install_plugins['theme'] ) ) {
+			unset( $install_plugins['theme'] );
+		}
+
+		update_option( $this->option_name, $install_plugins );
+
+	}
+
+	/**
 	 * Install plugin by slug
 	 *
 	 * @param string $slug Plugin slug.
@@ -230,7 +317,7 @@ class Stencil_Config {
 	 * @return bool
 	 */
 	public function install_plugin( $slug ) {
-		$download_link = $this->get_download_link( $slug );
+		$download_link = $this->get_plugin_download_link( $slug );
 
 		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
@@ -249,7 +336,38 @@ class Stencil_Config {
 	 *
 	 * @return string
 	 */
-	private function get_download_link( $slug ) {
+	private function get_plugin_download_link( $slug ) {
 		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
+	}
+
+	/**
+	 * Install theme by slug
+	 *
+	 * @param string $slug Theme slug.
+	 *
+	 * @return bool
+	 */
+	public function install_theme( $slug ) {
+		$download_link = $this->get_theme_download_link( $slug );
+
+		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		iframe_header();
+		$upgrader = new Theme_Upgrader( new Theme_Installer_Skin( array() ) );
+		$upgrader->install( $download_link );
+		iframe_footer();
+
+		return true;
+	}
+
+	/**
+	 * Get the download link for the plugin
+	 *
+	 * @param string $slug Plugin slug.
+	 *
+	 * @return string
+	 */
+	private function get_theme_download_link( $slug ) {
+		return sprintf( 'https://github.com/moorscode/stencil-sample-theme-%s/archive/master.zip', $slug );
 	}
 }
