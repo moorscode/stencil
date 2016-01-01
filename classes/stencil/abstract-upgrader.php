@@ -15,14 +15,7 @@ abstract class Stencil_Abstract_Upgrader {
 	/**
 	 * Check for upgrades once a day.
 	 */
-	const DAY_TIMESTAMP = 86400; // 60*60*24 = one day
-
-	/**
-	 * Versions of the plugins
-	 *
-	 * @var array
-	 */
-	protected $versions = array();
+	const DAY_TIMESTAMP = 86400; // 60*60*24 = one da
 
 	/**
 	 * Packages that can be upgraded
@@ -32,12 +25,21 @@ abstract class Stencil_Abstract_Upgrader {
 	protected $upgrades = array();
 
 	/**
+	 * Installables instance.
+	 *
+	 * @var Stencil_Installables
+	 */
+	protected $installables;
+
+	/**
 	 * Stencil_Upgrader constructor.
 	 */
 	public function __construct() {
 		// Periodically check for upgrades.
 		$option_name = $this->get_option_name();
 		$timeout     = $this->get_upgrade_timeout();
+
+		$this->installables = new Stencil_Installables();
 
 		// Get saved information.
 		$info = get_option( $option_name );
@@ -93,74 +95,31 @@ abstract class Stencil_Abstract_Upgrader {
 
 		$checked = true;
 
-		foreach ( $this->versions as $slug => $version ) {
-			if ( $this->can_upgrade( $slug ) ) {
-				$this->upgrades[] = $slug;
-			}
-		}
+		$this->upgrades = $this->installables->get_upgradable();
 	}
 
 	/**
 	 * Upgrade packages
 	 */
-	public function do_upgrades() {
+	public function upgrade_all() {
 		if ( empty( $this->upgrades ) ) {
 			return;
 		}
 
-		foreach ( $this->upgrades as $slug ) {
-			$this->upgrade( $slug );
+		foreach ( $this->upgrades as $installable ) {
+			$installable->upgrade();
 		}
-	}
-
-	/**
-	 * Upgrade a plugin
-	 *
-	 * Use WordPress file system controls.
-	 * Download zip.
-	 * Rename old directory.
-	 * Move unpacked contents.
-	 * Remove old directory.
-	 *
-	 * @param string $slug Plugin slug.
-	 */
-	abstract protected function upgrade( $slug );
-
-	/**
-	 * Is there an upgrade available?
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return mixed
-	 */
-	private function can_upgrade( $slug ) {
-		if ( ! isset( $this->versions[ $slug ] ) ) {
-			return false;
-		}
-
-		// Check if there are upgrades available.
-		$path = dirname( STENCIL_PATH ) . DIRECTORY_SEPARATOR . sprintf( '%1$s/%1$s.php', $slug );
-
-		if ( ! is_file( $path ) ) {
-			$headers = array(
-				'version' => '0.0.0',
-			);
-		} else {
-			$headers = get_file_data( $path, array( 'version' => 'Version' ) );
-		}
-
-		return version_compare( $headers['version'], $this->versions[ $slug ], '<' );
 	}
 
 	/**
 	 * Install theme by slug
 	 *
-	 * @param string $slug Theme slug.
+	 * @param Stencil_Installable_Theme $theme Installable.
 	 *
 	 * @return bool
 	 */
-	public function install_theme( $slug ) {
-		$download_link = $this->get_theme_download_link( $slug );
+	public function install_theme( Stencil_Installable_Theme $theme ) {
+		$download_link = $theme->get_download_link();
 
 		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 
@@ -173,39 +132,67 @@ abstract class Stencil_Abstract_Upgrader {
 	}
 
 	/**
-	 * Install plugin by slug
+	 * Remove theme
 	 *
-	 * @param string $slug Plugin slug.
-	 * @param bool $upgrade Installation or upgrade.
+	 * @param Stencil_Installable_Theme $theme Theme to remove.
 	 *
 	 * @return bool
 	 */
-	public function upgrade_plugin( $slug, $upgrade = true ) {
-		$download_link = $this->get_plugin_download_link( $slug );
+	public function remove_theme( Stencil_Installable_Theme $theme ) {
+		return $this->remove( $theme->get_directory() );
+	}
+
+	/**
+	 * Install plugin
+	 *
+	 * @param Stencil_Installable_Plugin $plugin Plugin to install.
+	 *
+	 * @return bool
+	 */
+	public function install_plugin( Stencil_Installable_Plugin $plugin ) {
+		$download_link = $plugin->get_download_link();
+		$target_path   = $plugin->get_directory();
 
 		return true;
 	}
 
 	/**
-	 * Get the download link for the plugin
+	 * Upgrade plugin
 	 *
-	 * @param string $slug Plugin slug.
+	 * @param Stencil_Installable_Plugin $plugin Plugin to upgrade.
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	private function get_plugin_download_link( $slug ) {
-		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
+	public function upgrade_plugin( Stencil_Installable_Plugin $plugin ) {
+		$download_link = $plugin->get_download_link();
+		$target_path   = $plugin->get_directory();
+
+		// Use install_plugin.
+		$this->install_plugin( $plugin );
+
+		return true;
 	}
 
 	/**
-	 * Get the download link for the plugin
+	 * Remove plugin
 	 *
-	 * @param string $slug Plugin slug.
+	 * @param Stencil_Installable_Plugin $plugin Plugin to remove.
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	private function get_theme_download_link( $slug ) {
-		return sprintf( 'https://github.com/moorscode/stencil-sample-theme-%s/archive/master.zip', $slug );
+	public function remove_plugin( Stencil_Installable_Plugin $plugin ) {
+		return $this->remove( $plugin->get_directory() );
+	}
+
+	/**
+	 * Remove directory
+	 *
+	 * @param string $directory Absolute path to remove.
+	 *
+	 * @return bool
+	 */
+	private function remove( $directory ) {
+		return true;
 	}
 
 	/**

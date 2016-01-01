@@ -39,9 +39,44 @@ interface Stencil_Installable_Interface {
 	public function passed_requirements();
 
 	/**
+	 * Get base directory
+	 *
+	 * @return string
+	 */
+	public function get_directory();
+
+	/**
 	 * Is there an upgrade available
 	 *
 	 * @return bool TRUE for new version, FALSE for no new version.
 	 */
 	public function has_upgrade();
+
+	/**
+	 * Get the file headers
+	 *
+	 * @return array
+	 */
+	public function get_file_data();
+
+	/**
+	 * Install
+	 *
+	 * @return bool
+	 */
+	public function install();
+
+	/**
+	 * Upgrade
+	 *
+	 * @return bool
+	 */
+	public function upgrade();
+
+	/**
+	 * Remove/uninstall
+	 *
+	 * @return bool
+	 */
+	public function remove();
 }

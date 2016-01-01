@@ -95,22 +95,10 @@ class Stencil_Config {
 	}
 
 	/**
-	 * Register all installable items.
+	 * Register installables.
 	 */
 	public function register_installables() {
-		$installables = $this->installables = new Stencil_Installables();
-
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-dwoo2', 'Dwoo 2', '5.4.0' ) );
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-mustache', 'Mustache' ) );
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-savant3', 'Savant 3' ) );
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-smarty2', 'Smarty 2.x' ) );
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-smarty3', 'Smarty 3.x' ) );
-		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-twig', 'Twig' ) );
-
-		$installables->add_installable( new Stencil_Installable_Theme( 'dwoo2', 'Dwoo' ) );
-		$installables->add_installable( new Stencil_Installable_Theme( 'mustache', 'Mustache' ) );
-		$installables->add_installable( new Stencil_Installable_Theme( 'smarty', 'Smarty' ) );
-		$installables->add_installable( new Stencil_Installable_Theme( 'twig', 'Twig' ) );
+		$this->installables = new Stencil_Installables();
 	}
 
 	/**
@@ -234,20 +222,20 @@ class Stencil_Config {
 
 		printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
 
-		$upgrader = new Stencil_Upgrader();
-
 		foreach ( $install_plugins['plugin'] as $slug => $on ) {
 
-			$installed = $upgrader->upgrade_plugin( $slug, false );
+			$plugin = $this->installables->get_by_slug( $slug );
 
-			if ( ! $installed ) {
-				printf(
-					'<em>%s</em><br>',
-					sprintf(
-						__( 'Plugin %s could not be installed!', 'stencil' ),
-						$this->known_implementations[ $slug ]
-					)
-				);
+			if ( ! $plugin->is_installed() ) {
+				$success = $plugin->install();
+				$message = __( 'Plugin %s could not be installed!', 'stencil' );
+			} else {
+				$success = $plugin->upgrade();
+				$message = __( 'Plugin %s could not be upgraded!', 'stencil' );
+			}
+
+			if ( ! $success ) {
+				printf( '<em>%s</em><br>', sprintf( $message, $plugin ) );
 			}
 
 			unset( $install_plugins['plugin'][ $slug ] );
