@@ -13,7 +13,16 @@ class Stencil_Installable_Theme extends Stencil_Abstract_Installable implements 
 	/**
 	 * Download format.
 	 */
-	const DOWNLOAD_FORMAT = 'https://github.com/moorscode/stencil-sample-theme-%s/archive/master.zip';
+	const DOWNLOAD_FORMAT = 'https://github.com/moorscode/%s/archive/master.zip';
+
+	/**
+	 * Get the theme slug.
+	 *
+	 * @return string
+	 */
+	public function get_slug() {
+		return sprintf( 'stencil-sample-theme-%s', $this->slug );
+	}
 
 	/**
 	 * Get the download link
@@ -21,17 +30,7 @@ class Stencil_Installable_Theme extends Stencil_Abstract_Installable implements 
 	 * @return bool|string
 	 */
 	public function get_download_link() {
-		return sprintf( self::DOWNLOAD_FORMAT, $this->slug );
-	}
-
-	/**
-	 * Is this installable installed.
-	 *
-	 * @return bool
-	 */
-	public function is_installed() {
-		// TODO: Implement is_installed() method.
-		return false;
+		return sprintf( self::DOWNLOAD_FORMAT, $this->get_slug() );
 	}
 
 	/**
@@ -40,7 +39,7 @@ class Stencil_Installable_Theme extends Stencil_Abstract_Installable implements 
 	 * @return string
 	 */
 	public function get_directory() {
-		return get_theme_root() . DIRECTORY_SEPARATOR . $this->slug;
+		return get_theme_root() . DIRECTORY_SEPARATOR . $this->get_slug();
 	}
 
 	/**
@@ -50,17 +49,8 @@ class Stencil_Installable_Theme extends Stencil_Abstract_Installable implements 
 	 */
 	public function get_file_data() {
 		$path = $this->get_directory() . DIRECTORY_SEPARATOR . 'style.css';
-		return get_file_data( $path, array( 'version' => 'Version' ) );
-	}
 
-	/**
-	 * Install
-	 *
-	 * @return bool
-	 */
-	public function install() {
-		$upgrader = new Stencil_Upgrader();
-		return $upgrader->install_theme( $this );
+		return get_file_data( $path, array( 'version' => 'Version' ) );
 	}
 
 	/**
@@ -73,12 +63,15 @@ class Stencil_Installable_Theme extends Stencil_Abstract_Installable implements 
 	}
 
 	/**
-	 * Remove/uninstall
+	 * Get upgrader needed.
 	 *
-	 * @return bool
+	 * @param bool $upgrading Installing or upgrading.
+	 *
+	 * @return WP_Upgrader
 	 */
-	public function remove() {
-		$upgrader = new Stencil_Upgrader();
-		return $upgrader->remove_theme( $this );
+	public function get_upgrader( $upgrading = false ) {
+		$skin = ( $upgrading ) ? new Theme_Upgrader_Skin() : new Theme_Installer_Skin();
+
+		return new Theme_Upgrader( $skin );
 	}
 }

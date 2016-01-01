@@ -1,12 +1,15 @@
 <?php
 /**
  * Abstract Installable
+ *
+ * @package Stencil
+ * @subpackage Upgrader
  */
 
 /**
  * Class Stencil_Installable
  */
-abstract class Stencil_Abstract_Installable {
+abstract class Stencil_Abstract_Installable implements Stencil_Installable_Interface {
 	/**
 	 * Slug of this module.
 	 *
@@ -54,8 +57,7 @@ abstract class Stencil_Abstract_Installable {
 	 * @return bool
 	 */
 	public function is_installed() {
-		// @todo add check for path?
-		return false;
+		return is_dir( $this->get_directory() );
 	}
 
 	/**
@@ -83,5 +85,144 @@ abstract class Stencil_Abstract_Installable {
 	 */
 	public function __toString() {
 		return $this->name;
+	}
+
+	/**
+	 * Remove/uninstall
+	 *
+	 * @return bool
+	 */
+	public function remove() {
+		return Stencil_File_System::remove( $this->get_directory() );
+	}
+
+	/**
+	 * Install
+	 *
+	 * @param bool $upgrading Installing or upgrading.
+	 *
+	 * @return bool|WP_Error True on succes, WP_Error on failure
+	 */
+	public function install( $upgrading = false ) {
+		$download_link = $this->get_download_link();
+		$target_path   = $this->get_directory();
+
+		require ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+
+		$upgrader = $this->get_upgrader();
+		$upgrader->init();
+
+		if ( ! $upgrading ) {
+			$upgrader->install_strings();
+		} else {
+			$upgrader->upgrade_strings();
+		}
+
+		$skin = $upgrader->skin;
+
+		$skin->header();
+
+		// Connect to the Filesystem first.
+		$res = $upgrader->fs_connect( array( WP_CONTENT_DIR, $target_path ) );
+
+		// Mainly for non-connected filesystem.
+		if ( ! $res ) {
+			$skin->footer();
+
+			return false;
+		}
+
+		$skin->before();
+
+		if ( is_wp_error( $res ) ) {
+			$this->cancel_installer( $skin, $res );
+
+			return $res;
+		}
+
+		/**
+		 * Download the package (Note, This just returns the filename
+		 * of the file if the package is a local file)
+		 */
+		$download = $upgrader->download_package( $download_link );
+		if ( is_wp_error( $download ) ) {
+			$this->cancel_installer( $skin, $download );
+
+			return $download;
+		}
+
+		// Unzips the file into a temporary directory.
+		$working_dir = $upgrader->unpack_package( $download, true );
+		if ( is_wp_error( $working_dir ) ) {
+			$this->cancel_installer( $skin, $working_dir );
+
+			return $working_dir;
+		}
+
+		$maintenance_mode = false;
+		$temporary_path   = $target_path . '_upgrading';
+
+		if ( $upgrading ) {
+			$maintenance_mode = $this->need_maintenance();
+			$upgrader->maintenance_mode( $maintenance_mode );
+
+			$skin->feedback( 'remove_old' );
+
+			if ( is_dir( $temporary_path ) ) {
+				Stencil_File_System::remove( $temporary_path );
+			}
+
+			// Move current install.
+			Stencil_File_System::move( $target_path, $temporary_path );
+
+			$skin->feedback( 'installing_package' );
+
+		} else {
+			$skin->feedback( 'installing_package' );
+		}
+
+		$installed = Stencil_File_System::move( $working_dir . DIRECTORY_SEPARATOR . $this->get_slug() . '-master', $target_path );
+		Stencil_File_System::remove( $working_dir );
+
+		if ( $upgrading ) {
+			if ( false === $installed || is_wp_error( $installed ) ) {
+				// Restore old install.
+				Stencil_File_System::move( $temporary_path, $target_path );
+
+				return false;
+			} else {
+				// Remove old install.
+				Stencil_File_System::remove( $temporary_path );
+			}
+		}
+
+		$upgrader->maintenance_mode( false );
+
+		$skin->feedback( $installed ? 'process_success' : 'process_failed' );
+
+		// Done.
+		return true;
+	}
+
+	/**
+	 * Upgrade
+	 *
+	 * @return bool
+	 * @throws Exception When an upgrade is already in progress for this package.
+	 */
+	public function upgrade() {
+		return $this->install( true );
+	}
+
+	/**
+	 * Cancel installer.
+	 *
+	 * @param WP_Upgrader_Skin $skin Skin to set message on.
+	 * @param WP_Error|string $error Error to display.
+	 */
+	protected function cancel_installer( $skin, $error ) {
+		$skin->error( $error );
+		$skin->after();
+		$skin->footer();
 	}
 }

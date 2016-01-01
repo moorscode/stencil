@@ -1,16 +1,15 @@
 <?php
-
 /**
- * Upgrader base
+ * Update the upgrader
  *
  * @package Stencil
  * @subpackage Upgrader
  */
 
 /**
- * Class Stencil_Abstract_Upgrader
+ * Class Stencil_Upgrader
  */
-abstract class Stencil_Abstract_Upgrader {
+class Stencil_Upgrader {
 
 	/**
 	 * Check for upgrades once a day.
@@ -30,6 +29,11 @@ abstract class Stencil_Abstract_Upgrader {
 	 * @var Stencil_Installables
 	 */
 	protected $installables;
+
+	/**
+	 * * Transient name to use for periodical upgrade checks.
+	 */
+	const TRANSIENT_NAME = 'stencil_upgrader_upgrader:last_check_timestamp';
 
 	/**
 	 * Stencil_Upgrader constructor.
@@ -56,11 +60,13 @@ abstract class Stencil_Abstract_Upgrader {
 	}
 
 	/**
-	 * Get the transient name to use.
+	 * Get transient name to use.
 	 *
 	 * @return string
 	 */
-	abstract protected function get_option_name();
+	protected function get_option_name() {
+		return self::TRANSIENT_NAME;
+	}
 
 	/**
 	 * Get the periodically check timeout.
@@ -84,18 +90,22 @@ abstract class Stencil_Abstract_Upgrader {
 
 	/**
 	 * Check for all upgrades
+	 *
+	 * @return bool
 	 */
 	public function check_for_upgrades() {
 		// Don't check twice.
 		static $checked = false;
 
 		if ( false !== $checked ) {
-			return;
+			return false;
 		}
 
 		$checked = true;
 
 		$this->upgrades = $this->installables->get_upgradable();
+
+		return true;
 	}
 
 	/**
@@ -109,90 +119,6 @@ abstract class Stencil_Abstract_Upgrader {
 		foreach ( $this->upgrades as $installable ) {
 			$installable->upgrade();
 		}
-	}
-
-	/**
-	 * Install theme by slug
-	 *
-	 * @param Stencil_Installable_Theme $theme Installable.
-	 *
-	 * @return bool
-	 */
-	public function install_theme( Stencil_Installable_Theme $theme ) {
-		$download_link = $theme->get_download_link();
-
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-		iframe_header();
-		$upgrader = new Theme_Upgrader( new Theme_Installer_Skin( array() ) );
-		$upgrader->install( $download_link );
-		iframe_footer();
-
-		return true;
-	}
-
-	/**
-	 * Remove theme
-	 *
-	 * @param Stencil_Installable_Theme $theme Theme to remove.
-	 *
-	 * @return bool
-	 */
-	public function remove_theme( Stencil_Installable_Theme $theme ) {
-		return $this->remove( $theme->get_directory() );
-	}
-
-	/**
-	 * Install plugin
-	 *
-	 * @param Stencil_Installable_Plugin $plugin Plugin to install.
-	 *
-	 * @return bool
-	 */
-	public function install_plugin( Stencil_Installable_Plugin $plugin ) {
-		$download_link = $plugin->get_download_link();
-		$target_path   = $plugin->get_directory();
-
-		return true;
-	}
-
-	/**
-	 * Upgrade plugin
-	 *
-	 * @param Stencil_Installable_Plugin $plugin Plugin to upgrade.
-	 *
-	 * @return bool
-	 */
-	public function upgrade_plugin( Stencil_Installable_Plugin $plugin ) {
-		$download_link = $plugin->get_download_link();
-		$target_path   = $plugin->get_directory();
-
-		// Use install_plugin.
-		$this->install_plugin( $plugin );
-
-		return true;
-	}
-
-	/**
-	 * Remove plugin
-	 *
-	 * @param Stencil_Installable_Plugin $plugin Plugin to remove.
-	 *
-	 * @return bool
-	 */
-	public function remove_plugin( Stencil_Installable_Plugin $plugin ) {
-		return $this->remove( $plugin->get_directory() );
-	}
-
-	/**
-	 * Remove directory
-	 *
-	 * @param string $directory Absolute path to remove.
-	 *
-	 * @return bool
-	 */
-	private function remove( $directory ) {
-		return true;
 	}
 
 	/**

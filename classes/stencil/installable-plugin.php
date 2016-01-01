@@ -50,7 +50,7 @@ class Stencil_Installable_Plugin extends Stencil_Abstract_Installable implements
 	 */
 	public function has_upgrade() {
 		// Check if there are upgrades available.
-		$path = dirname( STENCIL_PATH ) . DIRECTORY_SEPARATOR . sprintf( '%1$s/%1$s.php', $this->slug );
+		$path = $this->get_directory() . DIRECTORY_SEPARATOR . sprintf( '%s.php', $this->slug );
 
 		if ( ! is_file( $path ) ) {
 			$headers = array(
@@ -80,20 +80,12 @@ class Stencil_Installable_Plugin extends Stencil_Abstract_Installable implements
 		return empty( $errors ) ? true : $errors;
 	}
 
-	/**
-	 * Is this installable installed.
-	 *
-	 * @return bool
-	 */
-	public function is_installed() {
-		return is_dir( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $this->slug );
-	}
 
 	/**
 	 * Get base directory
 	 */
 	public function get_directory() {
-		return WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $this->slug;
+		return dirname( STENCIL_PATH ) . DIRECTORY_SEPARATOR . $this->slug;
 	}
 
 	/**
@@ -103,36 +95,20 @@ class Stencil_Installable_Plugin extends Stencil_Abstract_Installable implements
 	 */
 	public function get_file_data() {
 		$path = $this->get_directory() . DIRECTORY_SEPARATOR . $this->slug . '.php';
+
 		return get_file_data( $path, array( 'version' => 'Version' ) );
 	}
 
 	/**
-	 * Install
+	 * Upgrader
 	 *
-	 * @return bool
+	 * @param bool $upgrading Upgrading or installing.
+	 *
+	 * @return Plugin_Upgrader
 	 */
-	public function install() {
-		$upgrader = new Stencil_Upgrader();
-		return $upgrader->install_plugin( $this );
-	}
+	public function get_upgrader( $upgrading = false ) {
+		$skin = ( $upgrading ) ? new Plugin_Upgrader_Skin() : new Plugin_Installer_Skin();
 
-	/**
-	 * Upgrade
-	 *
-	 * @return bool
-	 */
-	public function upgrade() {
-		$upgrader = new Stencil_Upgrader();
-		return $upgrader->upgrade_plugin( $this );
-	}
-
-	/**
-	 * Remove/uninstall
-	 *
-	 * @return bool
-	 */
-	public function remove() {
-		$upgrader = new Stencil_Upgrader();
-		return $upgrader->remove_plugin( $this );
+		return new Plugin_Upgrader( $skin );
 	}
 }

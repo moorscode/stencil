@@ -22,9 +22,8 @@ class Stencil_Installable_Versions {
 			'stencil-mustache' => '1.0.0',
 			'stencil-savant3'  => '1.0.0',
 			'stencil-smarty2'  => '1.0.0',
-			'stencil-smarty3'  => '2.0.0',
-			'stencil-twig'     => '2.0.0',
-			'stencil-upgrader' => '1.0.0',
+			'stencil-smarty3'  => '1.0.0',
+			'stencil-twig'     => '1.0.0',
 		),
 		'themes'  => array(
 			'dwoo2'    => '1.0.0',

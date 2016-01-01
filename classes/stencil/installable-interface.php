@@ -79,4 +79,13 @@ interface Stencil_Installable_Interface {
 	 * @return bool
 	 */
 	public function remove();
+
+	/**
+	 * Get upgrader needed.
+	 *
+	 * @param bool $upgrading Installing or upgrading.
+	 *
+	 * @return WP_Upgrader
+	 */
+	public function get_upgrader( $upgrading = false );
 }

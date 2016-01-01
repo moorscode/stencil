@@ -191,12 +191,27 @@ class Stencil_Config {
 	public function option_themes() {
 		$themes = $this->installables->get_themes();
 		foreach ( $themes as $theme ) {
+
+			$base       = $this->option_name;
+			$exists     = $theme->is_installed();
+			$attributes = array();
+
+			/**
+			 * Check if installed.
+			 */
+			if ( $exists ) {
+				$attributes[] = 'checked="checked"';
+				$attributes[] = 'disabled="disabled"';
+				$base         = 'dummy';
+			}
+
 			/**
 			 * Disable input if plugin is installed.
 			 */
 			printf(
-				'<label><input type="checkbox" name="%s">%s</label><br>',
-				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $theme->get_slug() ) ),
+				'<label><input type="checkbox" name="%s"%s>%s</label><br>',
+				esc_attr( sprintf( '%s[theme][%s]', $base, $theme->get_slug() ) ),
+				implode( ' ', $attributes ),
 				esc_html( $theme )
 			);
 		}
@@ -271,18 +286,22 @@ class Stencil_Config {
 
 		printf( '<h2>%s</h2>', __( 'Installing themes...', 'stencil' ) );
 
-		$upgrader = new Stencil_Upgrader();
-
 		foreach ( $install_plugins['theme'] as $slug => $on ) {
 
-			$installed = $upgrader->upgrade_theme( $slug, false );
+			$theme = $this->installables->get_by_slug( $slug );
+
+			if ( $theme->is_installed() ) {
+				continue;
+			}
+
+			$installed = $theme->install();
 
 			if ( ! $installed ) {
 				printf(
 					'<em>%s</em><br>',
 					sprintf(
 						__( 'Theme %s could not be installed!', 'stencil' ),
-						$this->known_implementations[ $slug ]
+						$theme
 					)
 				);
 			}

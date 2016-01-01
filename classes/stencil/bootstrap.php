@@ -49,7 +49,7 @@ class Stencil_Bootstrap {
 		 */
 		if ( is_admin() ) {
 			new Stencil_Config();
-			new Stencil_Upgrader_Upgrader();
+			new Stencil_Upgrader();
 		}
 	}
 
