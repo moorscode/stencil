@@ -10,43 +10,13 @@
  * Class Stencil_Config
  */
 class Stencil_Config {
-	/**
-	 * Implementations provided by us.
-	 *
-	 * @var array
-	 */
-	private $known_implementations = array(
-		'stencil-dwoo'     => 'Dwoo',
-		'stencil-dwoo2'    => 'Dwoo 2',
-		'stencil-mustache' => 'Mustache',
-		'stencil-savant3'  => 'Savant 3',
-		'stencil-smarty2'  => 'Smarty 2.x',
-		'stencil-smarty3'  => 'Smarty 3.x',
-		'stencil-twig'     => 'Twig',
-	);
 
 	/**
-	 * Sample themes
+	 * All installables available
 	 *
-	 * @var array
+	 * @var Stencil_Installables
 	 */
-	private $sample_themes = array(
-		'dwoo2'    => 'Dwoo',
-		'mustache' => 'Mustache',
-		'savant'   => 'Savant',
-		'smarty'   => 'Smarty',
-		'twig'     => 'Twig',
-	);
-
-	/**
-	 * Implementations that require a specific minimal PHP version
-	 *
-	 * @var array
-	 */
-	private $implementation_php_requirements = array(
-		'stencil-dwoo'  => '5.3.0',
-		'stencil-dwoo2' => '5.3.0',
-	);
+	private $installables;
 
 	/**
 	 * Option page
@@ -76,6 +46,7 @@ class Stencil_Config {
 		// Register hooks for config page.
 		add_action( 'admin_menu', array( $this, 'create_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'register_options' ) );
+		add_action( 'admin_init', array( $this, 'register_installables' ) );
 	}
 
 	/**
@@ -124,6 +95,25 @@ class Stencil_Config {
 	}
 
 	/**
+	 * Register all installable items.
+	 */
+	public function register_installables() {
+		$installables = $this->installables = new Stencil_Installables();
+
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-dwoo2', 'Dwoo 2', '5.4.0' ) );
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-mustache', 'Mustache' ) );
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-savant3', 'Savant 3' ) );
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-smarty2', 'Smarty 2.x' ) );
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-smarty3', 'Smarty 3.x' ) );
+		$installables->add_installable( new Stencil_Installable_Plugin( 'stencil-twig', 'Twig' ) );
+
+		$installables->add_installable( new Stencil_Installable_Theme( 'dwoo2', 'Dwoo' ) );
+		$installables->add_installable( new Stencil_Installable_Theme( 'mustache', 'Mustache' ) );
+		$installables->add_installable( new Stencil_Installable_Theme( 'smarty', 'Smarty' ) );
+		$installables->add_installable( new Stencil_Installable_Theme( 'twig', 'Twig' ) );
+	}
+
+	/**
 	 * Show the settings
 	 */
 	public function settings_page() {
@@ -159,40 +149,67 @@ class Stencil_Config {
 	 * but are ignored on save.
 	 */
 	public function option_implementations() {
-		foreach ( $this->known_implementations as $slug => $name ) {
+		$plugins = $this->installables->get_plugins();
+		foreach ( $plugins as $plugin ) {
 
 			$attributes = array();
 			$available  = true;
 			$base       = $this->option_name;
-			$error      = '';
+			$upgrade    = $plugin->has_upgrade();
+			$exists     = $plugin->is_installed();
+			$message    = '';
 
-			if ( isset( $this->implementation_php_requirements[ $slug ] ) ) {
-				if ( version_compare( PHP_VERSION, $this->implementation_php_requirements[ $slug ], '<' ) ) {
-					$available = false;
-					$error     = sprintf( __( 'PHP version %s required, %s available.' ), $this->implementation_php_requirements[ $slug ], PHP_VERSION );
+			$passed = $plugin->passed_requirements();
+			if ( is_array( $passed ) ) {
+				$message   = implode( '<br>', $passed );
+				$available = false;
+			} else {
+				if ( $exists && $upgrade ) {
+					$message = __( 'Upgrade available!', 'stencil' );
 				}
 			}
 
-			$exists = is_dir( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $slug );
-
 			/**
-			 * Disable input if plugin is installed.
+			 * Check if installed.
 			 */
 			if ( $exists ) {
 				$attributes[] = 'checked="checked"';
 			}
 
-			if ( $exists || ! $available ) {
+			/**
+			 * Disable input if plugin is installed.
+			 * Disable if not available for installation.
+			 */
+			if ( ! $upgrade && ( $exists || ! $available ) ) {
 				$attributes[] = 'disabled="disabled"';
 				$base         = 'dummy';
 			}
 
 			printf(
 				'<label><input type="checkbox" name="%s"%s>%s%s</label><br>',
-				esc_attr( sprintf( '%s[plugin][%s]', $base, $slug ) ),
+				esc_attr( sprintf( '%s[plugin][%s]', $base, $plugin->get_slug() ) ),
 				implode( ' ', $attributes ),
-				esc_html( $name ),
-				! empty( $error ) ? sprintf( ' <small>(%s)</small>', $error ) : ''
+				esc_html( $plugin ),
+				! empty( $message ) ? sprintf( ' <small><strong>(%s)</strong></small>', $message ) : ''
+			);
+		}
+	}
+
+	/**
+	 * Show plugins that are not installed yet (but tracked)
+	 * Check to install; installed plugins are grayed out and checked
+	 * but are ignored on save.
+	 */
+	public function option_themes() {
+		$themes = $this->installables->get_themes();
+		foreach ( $themes as $theme ) {
+			/**
+			 * Disable input if plugin is installed.
+			 */
+			printf(
+				'<label><input type="checkbox" name="%s">%s</label><br>',
+				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $theme->get_slug() ) ),
+				esc_html( $theme )
 			);
 		}
 	}
@@ -200,7 +217,7 @@ class Stencil_Config {
 	/**
 	 * Install selected plugins
 	 */
-	public function maybe_install_plugins() {
+	private function maybe_install_plugins() {
 		/**
 		 * When a plugin can be updated; the field will be check on the settings
 		 * When all plugins have been installed, they disappear from the list.
@@ -217,9 +234,11 @@ class Stencil_Config {
 
 		printf( '<h2>%s</h2>', __( 'Installing plugins...', 'stencil' ) );
 
+		$upgrader = new Stencil_Upgrader();
+
 		foreach ( $install_plugins['plugin'] as $slug => $on ) {
 
-			$installed = $this->install_plugin( $slug );
+			$installed = $upgrader->upgrade_plugin( $slug, false );
 
 			if ( ! $installed ) {
 				printf(
@@ -245,58 +264,9 @@ class Stencil_Config {
 	}
 
 	/**
-	 * Install plugin by slug
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return bool
-	 */
-	public function install_plugin( $slug ) {
-		$download_link = $this->get_plugin_download_link( $slug );
-
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-		iframe_header();
-		$upgrader = new Plugin_Upgrader( new Plugin_Installer_Skin( array() ) );
-		$upgrader->install( $download_link );
-		iframe_footer();
-
-		return true;
-	}
-
-	/**
-	 * Get the download link for the plugin
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return string
-	 */
-	private function get_plugin_download_link( $slug ) {
-		return sprintf( 'https://github.com/moorscode/%s/archive/master.zip', $slug );
-	}
-
-	/**
-	 * Show plugins that are not installed yet (but tracked)
-	 * Check to install; installed plugins are grayed out and checked
-	 * but are ignored on save.
-	 */
-	public function option_themes() {
-		foreach ( $this->sample_themes as $slug => $name ) {
-			/**
-			 * Disable input if plugin is installed.
-			 */
-			printf(
-				'<label><input type="checkbox" name="%s">%s</label><br>',
-				esc_attr( sprintf( '%s[theme][%s]', $this->option_name, $slug ) ),
-				esc_html( $name )
-			);
-		}
-	}
-
-	/**
 	 * Install selected themes
 	 */
-	public function maybe_install_themes() {
+	private function maybe_install_themes() {
 		/**
 		 * When a plugin can be updated; the field will be check on the settings
 		 * When all plugins have been installed, they disappear from the list.
@@ -313,9 +283,11 @@ class Stencil_Config {
 
 		printf( '<h2>%s</h2>', __( 'Installing themes...', 'stencil' ) );
 
+		$upgrader = new Stencil_Upgrader();
+
 		foreach ( $install_plugins['theme'] as $slug => $on ) {
 
-			$installed = $this->install_theme( $slug );
+			$installed = $upgrader->upgrade_theme( $slug, false );
 
 			if ( ! $installed ) {
 				printf(
@@ -338,36 +310,5 @@ class Stencil_Config {
 
 		update_option( $this->option_name, $install_plugins );
 
-	}
-
-	/**
-	 * Install theme by slug
-	 *
-	 * @param string $slug Theme slug.
-	 *
-	 * @return bool
-	 */
-	public function install_theme( $slug ) {
-		$download_link = $this->get_theme_download_link( $slug );
-
-		include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-
-		iframe_header();
-		$upgrader = new Theme_Upgrader( new Theme_Installer_Skin( array() ) );
-		$upgrader->install( $download_link );
-		iframe_footer();
-
-		return true;
-	}
-
-	/**
-	 * Get the download link for the plugin
-	 *
-	 * @param string $slug Plugin slug.
-	 *
-	 * @return string
-	 */
-	private function get_theme_download_link( $slug ) {
-		return sprintf( 'https://github.com/moorscode/stencil-sample-theme-%s/archive/master.zip', $slug );
 	}
 }
