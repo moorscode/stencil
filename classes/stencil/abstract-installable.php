@@ -218,7 +218,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * Cancel installer.
 	 *
 	 * @param WP_Upgrader_Skin $skin Skin to set message on.
-	 * @param WP_Error|string $error Error to display.
+	 * @param WP_Error|string  $error Error to display.
 	 */
 	protected function cancel_installer( $skin, $error ) {
 		$skin->error( $error );
