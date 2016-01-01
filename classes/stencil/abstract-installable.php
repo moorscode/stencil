@@ -159,12 +159,10 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 			return $working_dir;
 		}
 
-		$maintenance_mode = false;
-		$temporary_path   = $target_path . '_upgrading';
+		$temporary_path = $target_path . '_upgrading';
 
 		if ( $upgrading ) {
-			$maintenance_mode = $this->need_maintenance();
-			$upgrader->maintenance_mode( $maintenance_mode );
+			$upgrader->maintenance_mode( true );
 
 			$skin->feedback( 'remove_old' );
 
@@ -218,7 +216,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * Cancel installer.
 	 *
 	 * @param WP_Upgrader_Skin $skin Skin to set message on.
-	 * @param WP_Error|string  $error Error to display.
+	 * @param WP_Error|string $error Error to display.
 	 */
 	protected function cancel_installer( $skin, $error ) {
 		$skin->error( $error );

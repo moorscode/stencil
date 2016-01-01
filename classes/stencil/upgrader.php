@@ -74,8 +74,6 @@ class Stencil_Upgrader {
 	 * @return int
 	 */
 	protected function get_upgrade_timeout() {
-		return 1;
-
 		return self::DAY_TIMESTAMP;
 	}
 
