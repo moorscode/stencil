@@ -60,7 +60,7 @@ class Stencil_Installable_Versions {
 	 *
 	 * @return array|bool
 	 */
-	private function load() {
+	private static function load() {
 		if ( self::$loaded ) {
 			return;
 		}
