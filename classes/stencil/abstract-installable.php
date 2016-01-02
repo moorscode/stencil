@@ -90,10 +90,44 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	/**
 	 * Remove/uninstall
 	 *
-	 * @return bool
+	 * @return bool|WP_Error
 	 */
 	public function remove() {
-		return Stencil_File_System::remove( $this->get_directory() );
+		global $wp_filesystem;
+
+		$target_path = $this->get_directory();
+
+		$upgrader = $this->get_upgrader();
+		$upgrader->init();
+
+		$skin = $upgrader->skin;
+
+		$skin->header();
+
+		// Connect to the Filesystem first.
+		$res = $upgrader->fs_connect( array( WP_CONTENT_DIR, $target_path ) );
+
+		// Mainly for non-connected filesystem.
+		if ( ! $res ) {
+			$skin->footer();
+
+			return false;
+		}
+
+		$skin->before();
+
+		if ( is_wp_error( $res ) ) {
+			$this->cancel_installer( $skin, $res );
+
+			return $res;
+		}
+
+		$deleted = $wp_filesystem->delete( $target_path, true );
+
+		$skin->after();
+		$skin->footer();
+
+		return $deleted;
 	}
 
 	/**
@@ -196,6 +230,9 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 		$upgrader->maintenance_mode( false );
 
 		$skin->feedback( $installed ? 'process_success' : 'process_failed' );
+
+		$skin->after();
+		$skin->footer();
 
 		// Done.
 		return true;
