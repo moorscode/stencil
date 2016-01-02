@@ -196,7 +196,6 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 		$skin->feedback( 'installing_package' );
 
 		$installed = $wp_filesystem->move( $working_dir . DIRECTORY_SEPARATOR . $this->get_slug() . '-master', $target_path );
-		$wp_filesystem->rmdir( $working_dir, true );
 
 		if ( $upgrading ) {
 			if ( false === $installed || is_wp_error( $installed ) ) {
@@ -205,6 +204,13 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 
 				return false;
 			} else {
+
+				// Move stencil path if it was located inside current intall.
+				if ( false === strpos( $target_path, STENCIL_PATH ) && 0 === strpos( STENCIL_PATH, $target_path ) ) {
+					$relative_path = str_replace( $target_path, '', STENCIL_PATH );
+					$wp_filesystem->move( $temporary_path . $relative_path, STENCIL_PATH );
+				}
+
 				// Remove old install.
 				$wp_filesystem->rmdir( $temporary_path, true );
 			}
