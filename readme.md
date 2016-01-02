@@ -5,6 +5,9 @@
 
 Stencil gives you the power to use a proper template engine in your WordPress theme.
 
+Because of the rules for WordPress plugins, Stencil is going to be setup as an "in-theme" framework.
+This repository will exist and be used for updating the plugin and providing usage documentation.
+
 To use Stencil you need two things:
 
 1. An implementation plugin, which provides an engine
