@@ -100,32 +100,15 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 		$upgrader = $this->get_upgrader();
 		$upgrader->init();
 
-		$skin = $upgrader->skin;
-
-		$skin->header();
-
 		// Connect to the Filesystem first.
 		$res = $upgrader->fs_connect( array( WP_CONTENT_DIR, $target_path ) );
 
 		// Mainly for non-connected filesystem.
-		if ( ! $res ) {
-			$skin->footer();
-
+		if ( ! $res || is_wp_error( $res ) ) {
 			return false;
 		}
 
-		$skin->before();
-
-		if ( is_wp_error( $res ) ) {
-			$this->cancel_installer( $skin, $res );
-
-			return $res;
-		}
-
-		$deleted = $wp_filesystem->delete( $target_path, true );
-
-		$skin->after();
-		$skin->footer();
+		$deleted = $wpremove-_filesystem->rmdir( $target_path, true );
 
 		return $deleted;
 	}
@@ -203,7 +186,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 			$skin->feedback( 'remove_old' );
 
 			if ( is_dir( $temporary_path ) ) {
-				$wp_filesystem->delete( $temporary_path, true );
+				$wp_filesystem->rmdir( $temporary_path, true );
 			}
 
 			// Move current install.
@@ -213,7 +196,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 		$skin->feedback( 'installing_package' );
 
 		$installed = $wp_filesystem->move( $working_dir . DIRECTORY_SEPARATOR . $this->get_slug() . '-master', $target_path );
-		$wp_filesystem->delete( $working_dir, true );
+		$wp_filesystem->rmdir( $working_dir, true );
 
 		if ( $upgrading ) {
 			if ( false === $installed || is_wp_error( $installed ) ) {
@@ -223,7 +206,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 				return false;
 			} else {
 				// Remove old install.
-				$wp_filesystem->delete( $temporary_path, true );
+				$wp_filesystem->rmdir( $temporary_path, true );
 			}
 		}
 
@@ -252,7 +235,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * Cancel installer.
 	 *
 	 * @param WP_Upgrader_Skin $skin Skin to set message on.
-	 * @param WP_Error|string  $error Error to display.
+	 * @param WP_Error|string $error Error to display.
 	 */
 	protected function cancel_installer( $skin, $error ) {
 		$skin->error( $error );
