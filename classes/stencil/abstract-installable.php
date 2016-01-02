@@ -108,7 +108,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 			return false;
 		}
 
-		$deleted = $wpremove-_filesystem->rmdir( $target_path, true );
+		$deleted = $wp_filesystem->rmdir( $target_path, true );
 
 		return $deleted;
 	}
