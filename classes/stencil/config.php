@@ -151,10 +151,10 @@ class Stencil_Config {
 			if ( is_array( $passed ) ) {
 				$message   = implode( '<br>', $passed );
 				$available = false;
-			} else {
-				if ( $exists && $upgrade ) {
-					$message = __( 'Upgrade available!', 'stencil' );
-				}
+			}
+
+			if ( $available && $exists && $upgrade ) {
+				$message = __( 'Upgrade available!', 'stencil' );
 			}
 
 			/**
@@ -168,7 +168,7 @@ class Stencil_Config {
 			 * Disable input if plugin is installed.
 			 * Disable if not available for installation.
 			 */
-			if ( ! $upgrade && ( $exists || ! $available ) ) {
+			if ( ( $exists && ! $upgrade ) || ! $available ) {
 				$attributes[] = 'disabled="disabled"';
 				$base         = 'dummy';
 			}
