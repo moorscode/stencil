@@ -72,31 +72,4 @@ class Stencil_File_System {
 
 		return $paths;
 	}
-
-	/**
-	 * Move a file or folder
-	 *
-	 * @param string $source Move this.
-	 * @param string $destination To this.
-	 *
-	 * @return bool
-	 */
-	public static function move( $source, $destination ) {
-		global $wp_filesystem;
-
-		return $wp_filesystem->move( $source, $destination );
-	}
-
-	/**
-	 * Remove directory
-	 *
-	 * @param string $directory Directory to remove.
-	 *
-	 * @return bool
-	 */
-	public static function remove( $directory ) {
-		global $wp_filesystem;
-
-		return $wp_filesystem->delete( $directory, true );
-	}
 }

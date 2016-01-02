@@ -104,6 +104,8 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * @return bool|WP_Error True on succes, WP_Error on failure
 	 */
 	public function install( $upgrading = false ) {
+		global $wp_filesystem;
+
 		$download_link = $this->get_download_link();
 		$target_path   = $this->get_directory();
 
@@ -167,30 +169,27 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 			$skin->feedback( 'remove_old' );
 
 			if ( is_dir( $temporary_path ) ) {
-				Stencil_File_System::remove( $temporary_path );
+				$wp_filesystem->delete( $temporary_path, true );
 			}
 
 			// Move current install.
-			Stencil_File_System::move( $target_path, $temporary_path );
-
-			$skin->feedback( 'installing_package' );
-
-		} else {
-			$skin->feedback( 'installing_package' );
+			$wp_filesystem->move( $target_path, $temporary_path );
 		}
 
-		$installed = Stencil_File_System::move( $working_dir . DIRECTORY_SEPARATOR . $this->get_slug() . '-master', $target_path );
-		Stencil_File_System::remove( $working_dir );
+		$skin->feedback( 'installing_package' );
+
+		$installed = $wp_filesystem->move( $working_dir . DIRECTORY_SEPARATOR . $this->get_slug() . '-master', $target_path );
+		$wp_filesystem->delete( $working_dir, true );
 
 		if ( $upgrading ) {
 			if ( false === $installed || is_wp_error( $installed ) ) {
 				// Restore old install.
-				Stencil_File_System::move( $temporary_path, $target_path );
+				$wp_filesystem->move( $temporary_path, $target_path );
 
 				return false;
 			} else {
 				// Remove old install.
-				Stencil_File_System::remove( $temporary_path );
+				$wp_filesystem->delete( $temporary_path, true );
 			}
 		}
 
@@ -216,7 +215,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * Cancel installer.
 	 *
 	 * @param WP_Upgrader_Skin $skin Skin to set message on.
-	 * @param WP_Error|string $error Error to display.
+	 * @param WP_Error|string  $error Error to display.
 	 */
 	protected function cancel_installer( $skin, $error ) {
 		$skin->error( $error );
