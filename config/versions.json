@@ -1,0 +1,18 @@
+{
+  "plugins": {
+    "stencil": "1.0.0",
+    "stencil-dwoo2": "1.0.0",
+    "stencil-mustache": "1.0.0",
+    "stencil-savant3": "1.0.0",
+    "stencil-smarty2": "1.0.0",
+    "stencil-smarty3": "1.0.0",
+    "stencil-twig": "1.0.0"
+  },
+  "themes": {
+    "dwoo2": "1.0.0",
+    "mustache": "1.0.0",
+    "savant": "1.0.0",
+    "smarty": "1.0.0",
+    "twig": "1.0.0"
+  }
+}
