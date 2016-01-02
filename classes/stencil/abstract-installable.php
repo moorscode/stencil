@@ -121,6 +121,14 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * @return bool|WP_Error True on succes, WP_Error on failure
 	 */
 	public function install( $upgrading = false ) {
+		/**
+		 * Themes cannot be ugpraded.
+		 * So we never have to problem that the STENCIL_PATH is being moved.
+		 *
+		 * Though if a new theme is installed, should the installed implementations
+		 * be copied to this new install aswel?
+		 */
+
 		global $wp_filesystem;
 
 		$download_link = $this->get_download_link();
@@ -204,13 +212,6 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 
 				return false;
 			} else {
-
-				// Move stencil path if it was located inside current intall.
-				if ( false === strpos( $target_path, STENCIL_PATH ) && 0 === strpos( STENCIL_PATH, $target_path ) ) {
-					$relative_path = str_replace( $target_path, '', STENCIL_PATH );
-					$wp_filesystem->move( $temporary_path . $relative_path, STENCIL_PATH );
-				}
-
 				// Remove old install.
 				$wp_filesystem->rmdir( $temporary_path, true );
 			}
@@ -241,7 +242,7 @@ abstract class Stencil_Abstract_Installable implements Stencil_Installable_Inter
 	 * Cancel installer.
 	 *
 	 * @param WP_Upgrader_Skin $skin Skin to set message on.
-	 * @param WP_Error|string $error Error to display.
+	 * @param WP_Error|string  $error Error to display.
 	 */
 	protected function cancel_installer( $skin, $error ) {
 		$skin->error( $error );
