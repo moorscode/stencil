@@ -1,6 +1,6 @@
 {
   "plugins": {
-    "stencil": "1.0.0",
+    "stencil": "2.0.0",
     "stencil-dwoo2": "1.0.0",
     "stencil-mustache": "1.0.0",
     "stencil-savant3": "1.0.0",

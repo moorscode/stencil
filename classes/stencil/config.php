@@ -30,7 +30,7 @@ class Stencil_Config {
 	 *
 	 * @var string
 	 */
-	private $option_group = 'stencil-implementations';
+	private $option_group = 'stencil-installables';
 
 	/**
 	 * The name of the option
@@ -58,7 +58,7 @@ class Stencil_Config {
 			__( 'Stencil implementations', 'stencil' ),
 			'Stencil',
 			'install_plugins',
-			'stencil-implementations',
+			'stencil-installables',
 			array( $this, 'settings_page' )
 		);
 	}
@@ -71,18 +71,18 @@ class Stencil_Config {
 		register_setting( $this->option_group, $this->option_name );
 
 		add_settings_section(
-			'stencil-implementations',
+			'stencil-installables',
 			'',
 			'',
 			$this->option_page
 		);
 
 		add_settings_field(
-			'implementations',
-			__( 'Implementations', 'stencil' ),
-			array( $this, 'option_implementations' ),
+			'plugins',
+			__( 'Plugins', 'stencil' ),
+			array( $this, 'option_plugins' ),
 			$this->option_page,
-			'stencil-implementations'
+			'stencil-installables'
 		);
 
 		add_settings_field(
@@ -90,7 +90,7 @@ class Stencil_Config {
 			__( 'Sample themes', 'stencil' ),
 			array( $this, 'option_themes' ),
 			$this->option_page,
-			'stencil-implementations'
+			'stencil-installables'
 		);
 	}
 
@@ -136,7 +136,7 @@ class Stencil_Config {
 	 * Check to install; installed plugins are grayed out and checked
 	 * but are ignored on save.
 	 */
-	public function option_implementations() {
+	public function option_plugins() {
 		$plugins = $this->installables->get_plugins();
 		foreach ( $plugins as $plugin ) {
 

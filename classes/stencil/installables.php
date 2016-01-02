@@ -22,6 +22,7 @@ class Stencil_Installables {
 	 * Register all installable items.
 	 */
 	public function __construct() {
+		$this->add_installable( new Stencil_Installable_Plugin( 'stencil', 'Stencil' ) );
 		$this->add_installable( new Stencil_Installable_Plugin( 'stencil-dwoo2', 'Dwoo 2', '5.4.0' ) );
 		$this->add_installable( new Stencil_Installable_Plugin( 'stencil-mustache', 'Mustache' ) );
 		$this->add_installable( new Stencil_Installable_Plugin( 'stencil-savant3', 'Savant 3' ) );

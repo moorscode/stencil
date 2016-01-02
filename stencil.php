@@ -3,7 +3,7 @@
 Plugin Name: Stencil
 Plugin URI: https://github.com/moorscode/stencil/
 Description: Ever wanted to use a "real" templating engine to build your theme on? With Stencil you can! Enable the Addon that provides the engine you want to use and be up and running in no time. Addons available for Smarty 2, Smarty 3, Twig and more!
-Version: 1.0.0
+Version: 2.0.0
 Author: Jip Moors (moorscode)
 Author URI: http://www.jipmoors.nl
 Text Domain: stencil
