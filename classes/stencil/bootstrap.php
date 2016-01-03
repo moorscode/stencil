@@ -17,9 +17,21 @@
 class Stencil_Bootstrap {
 
 	/**
+	 * Did we bootstrap?
+	 *
+	 * @var bool
+	 */
+	private static $bootstrapped = false;
+
+	/**
 	 * Bootstrap constructor.
 	 */
 	public function __construct() {
+
+		// Make sure we never bootstrap multiple times.
+		if ( true === self::$bootstrapped ) {
+			return;
+		}
 
 		/**
 		 * Initialize the plugin to check for registered addons
@@ -51,6 +63,8 @@ class Stencil_Bootstrap {
 			new Stencil_Config();
 			new Stencil_Upgrader();
 		}
+
+		self::$bootstrapped = true;
 	}
 
 	/**

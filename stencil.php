@@ -53,8 +53,7 @@ if ( class_exists( 'Stencil' ) ) {
 	require 'helpers/loader.php';
 
 	// Everything went well.
-	if ( class_exists( 'Stencil_Bootstrap' ) ) {
-
+	if ( class_exists( 'Stencil' ) ) {
 		require 'helpers/front-end-functions.php';
 
 		// Boot up the bootstrapper.
